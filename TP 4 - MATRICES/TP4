@@ -1,0 +1,249 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+#include <string.h>
+#define DIMF 4
+#define DIMC 4
+
+#define DIM2C 12  //longer for words, strings yippieeee
+
+
+void loadMatrix(int matrix[DIMF][DIMC]);
+void showMatrix(int matrix[DIMF][DIMC]);
+void loadMatrixRand(int matrix[DIMF][DIMC]);
+int addMatrix(int matrix[DIMF][DIMC]);
+float averageMatrix(int matrix[DIMF][DIMC]);
+bool findElement(int matrix[DIMF][DIMC], int element);
+int loadWord(char matrix[DIMF][DIM2C]);
+void showCharMatrix(char matrix[DIMF][DIM2C], int validos);
+int findWord(char matrix[DIMF][DIM2C], int validos, char word[DIM2C]);
+
+
+int main()
+{
+    //VARIABLES N STUFF
+    srand(time(NULL));   // we only need this once
+    int matrix1[DIMF][DIMC];
+    char matrix2[DIMF][DIM2C]; //mas columnas, entran mejor las palabras yippieeee
+    float averageM = 0.0;
+    int elementLost = 0;
+    bool found = false;
+    int validos = 0;
+    int wordfound = 0;
+    char missingword[DIM2C];
+
+
+    int ejercicio = 0;
+
+    printf("\nBienvenido. Seleccione su ejercicio.\n\n");
+    printf("\n-----------------------------------------");
+    printf("\n1- Load and Show Matrix (Ejercicio 1 y 2)");
+    printf("\n2- FULL WITH RANDOM SHIT (Ejercicio 3)");
+    printf("\n3- Adding of all of the elements (Ejercicio 4)");
+    printf("\n4- Average of all of the elements(Ejercicio 5)");
+    printf("\n5- Find an element!(Ejercicio 6)");
+    printf("\n6- Load words! (Ejercicio 7 y 8)");
+    printf("\n7- Find words! (Ejercicio 9)");
+    printf("\n-----------------------------------------");
+    printf("\nSeleccione una opcion: ");
+    scanf("%i", &ejercicio);
+
+    switch (ejercicio)
+    {
+    case 1: //ejercicio 1 y 2 load and show
+        printf("\nVamos a cargar la matriz!");
+        loadMatrix(matrix1);
+        showMatrix(matrix1);
+        break;
+    case 2: // ejercicio 3
+        printf("\n Vamos a llenar la matrix con valores random.");
+        loadMatrixRand(matrix1);
+        showMatrix(matrix1);
+        break;
+    case 3: //ejercicio 4 (suma total)
+        printf("\nVamos a cargar la matriz!");
+        loadMatrix(matrix1);
+        break;
+    case 4: //ejercicio 5 (float que calcule el promedio)
+        printf("\nVamos a cargar la matriz!");
+        loadMatrix(matrix1);
+        averageM = averageMatrix(matrix1);
+        printf("El promedio de la matrix es %.2f", averageM);
+        break;
+    case 5:
+        printf("\nVamos a cargar la matriz!");
+        loadMatrix(matrix1);
+        printf("\nIngrese un elemento a ser buscado: ");
+        scanf("%i", &elementLost);
+        found = findElement(matrix1, elementLost);
+            if(found == true)
+            {
+                printf("\nEl elemento se encuentra dentro del arreglo.");
+            } else {
+                printf("\nEl elemento NO se encuentra dentro del arreglo.");
+            }
+        break;
+    case 6:
+        printf("\nVamos a cargar la matriz con strings! :D");
+        validos = loadWord(matrix2);
+        showCharMatrix(matrix2, validos);
+        break;
+    case 7:
+        printf("\nVamos a cargar la matriz con strings! :D");
+        validos = loadWord(matrix2);
+        printf("\nBien hecho! Ahora, escribe una palabra a buscar: ");
+        fflush(stdin);
+        scanf("%s", missingword);
+        wordfound = findWord(matrix2,validos, missingword);
+        if(wordfound != 0)
+        {
+            printf("Su palabra no estaba en la matrix! Return recibido: %i", wordfound);
+        }
+
+        break;
+    default:
+        printf("\nOpcion Invalida.");
+        break;
+
+    }
+
+    return 0;
+}
+
+void loadMatrix(int matrix[DIMF][DIMC])
+{
+    for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            printf("\nIngrese un dato para matrix[%i][%i]: ", i, j);
+            scanf("%i",&matrix[i][j]);
+        }
+    }
+}
+
+void showMatrix(int matrix[DIMF][DIMC])
+{
+    for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            printf("[  %i  ]", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void loadMatrixRand(int matrix[DIMF][DIMC])
+{
+    int r = rand() % 100 + 1;
+    for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            matrix[i][j] = r;
+        }
+    }
+}
+
+int addMatrix(int matrix[DIMF][DIMC])
+{
+    int suma = 0;
+    for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            suma += matrix[i][j];
+        }
+    }
+    return suma;
+}
+
+float averageMatrix(int matrix[DIMF][DIMC])
+{
+    float average = 0.0;
+    int suma = 0;
+    int validos = DIMF * DIMC;
+
+    for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            suma += matrix[i][j];
+        }
+    }
+
+    average = (float)suma / validos;
+
+    return average;
+}
+
+bool findElement(int matrix[DIMF][DIMC], int element)
+{
+     for(int i = 0; i < DIMF; i++)
+    {
+        for(int j = 0; j < DIMC; j++)
+        {
+            if (matrix[i][j] == element)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+int loadWord(char matrix[DIMF][DIM2C])
+{
+    int i = 0;
+    char keepgoing = 'y';
+    for(i = 0; i < DIMF && keepgoing == 'y'; i++)
+    {
+
+        printf("\nIngrese una palabra: ");
+        fflush(stdin);
+        scanf("%s", matrix[i]);
+
+        printf("\nEntran mas palabras. Quieres imprimir mas? (y/n)");
+        fflush(stdin);
+        scanf(" %c", &keepgoing);
+    }
+
+    return i; //validos
+}
+
+void showCharMatrix(char matrix[DIMF][DIM2C], int validos)
+{
+    for(int i = 0; i < validos; i++)
+    {
+        for(int j = 0; j < DIM2C; j++)
+        {
+            printf("[  %c  ]", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+int findWord(char matrix[DIMF][DIM2C], int validos, char word[DIM2C])
+{
+    for(int i = 0; i < validos; i++)
+    {
+        for(int j = 0; j < DIM2C; j++)
+        {
+            int result = strcmp(matrix[i], word);
+
+            if (result == 0)
+            {
+                printf("\nThe word is in the matrix! position: %i", i);
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+
+
+
