@@ -1,0 +1,398 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "pila.h"
+
+#define DIM 10
+#define DIM2 100
+
+int loadArr(int array1[], int dim);
+int loadArrChar(char array1[], int dim);
+void showArr(int array1[], int validos);
+void showArrChar(char array1[], int validos);
+int addElements(int array1[], int validos);
+void ArrayToPila(int array1[], Pila* pila, int validos);
+float addArrayElementsfloaty(float array1[], int validos);
+bool IsOnArray(int array1[], int validos, int num);
+//void insert(int array1[], int pos, int dato);
+
+int LowestElementPosChar(char array1[], int validos);
+int LowestElementPos(int array1[], int validos);
+void insert(char array1[], int validos, char dato);
+int BiggestChar(char array1[], int validos);
+bool palindromic(char array1[], int validos);
+void flipArr(int array1[],int validos);
+
+
+
+
+void merge2arrays(char ordenado1[], char ordenado2[],char finalarray[]); ///punto12
+
+
+int main()
+{
+
+    int ejercicio = 0;
+    int validos = 0;
+    int suma = 0;
+    float floatsuma = 0.0;
+    Pila pila;
+    inicpila(&pila);
+
+    int arrayfr[DIM];
+    float arrayfloaty[DIM2];
+    char arrayforril[DIM] = {'a', 'b', 'c', 'e', 'f', 'g'};
+    char datochar;
+
+    char arrayOrdenado1[DIM] = {'a', 'c', 'e', 'g', 'i','k'};
+    char arrayOrdenado2[DIM] = {'b', 'd', 'f', 'h', 'j'};
+    char mergedArrray[DIM];
+
+    int checknum = 0;
+
+
+    printf("\nBienvenido a su programa! Ingrese el numero de ejercicio que vea conveniente.");
+    printf("\nEjercicio 1: Cargar el arreglo! <--- funcion sola, todas la tienen incluidas!");
+    printf("\nEjercicio 2: Mostrar el arreglo! <----- funcion sola, lo mismo");
+    printf("\nEjercicio 3: Sumar los elementos dentro del array!");
+    printf("\nEjercicio 4: Pasar de array a pila!");
+    printf("\nEjercicio 5: Sumar los elementos de un array float!");
+    printf("\nEjercicio 6: Comprobar si un elemento esta en el arreglo ");
+    printf("\nEjercicio 7: Insertar un caracter ordenado alfabeticamente");
+    printf("\nEjercicio 8: Elemento maximo dentro de un array cargado.");
+    printf("\nEjercicio 9: Capicua?");
+    printf("\nEjercicio 10:");
+    printf("\nEjercicio 11:");
+    printf("\nEjercicio 12: fr");
+    printf("\nEjercicio 13:");
+    printf("\n| |              (_)     ");
+    printf("\n| |    _   _  _ _  _");
+    printf("\n| |   | | | |/ _| |/ _` | ' \ / _ \  ");
+    printf("\n| || || | (| | (| | | | | () |    gaming, tips de marketing, filantropia y mas");
+    printf("\n\/\,|\||\,|| ||\/ ");
+
+
+    fflush(stdin);
+    printf("\n\nIngrese el numero de ejercicio: ");
+    scanf("%i", &ejercicio);
+
+    switch(ejercicio)
+    {
+    case 1:
+
+        validos = loadArr(&arrayfr, DIM);
+        showArr(arrayfr, validos);
+        printf("\nPROGRAM ENDED LOLOLOLOLOL---------");
+        system("PAUSE");
+        break;
+
+    case 2:
+        showArr(arrayfr, validos);
+        break;
+
+    case 3:
+        printf("Vamos a sumar los elementos del array!");
+        validos = loadArr(&arrayfr, DIM);
+        showArr(arrayfr, validos);
+        suma = addElements(&arrayfr, validos);
+        printf("\nLa suma de los elementos es %i", suma);
+        break;
+
+    case 4:
+        printf("Pasaremos los elementos de su array a una pila!");
+        validos = loadArr(&arrayfr, DIM);
+        ArrayToPila(arrayfr, &pila, validos);
+        mostrar(&pila);
+        system("PAUSE");
+        break;
+
+    case 5:
+        printf("Sumaremos los elementos de su array float.");
+        validos = loadArrFloat(arrayfloaty, DIM2);
+        showArrFloat(arrayfloaty, validos);
+        floatsuma = addArrayElementsfloaty(arrayfloaty, validos);
+        printf("\nLa suma de los elementos es %f", floatsuma);
+        break;
+
+        printf("Error: opcion invalida.");
+        break;
+
+    case 6:
+        printf("\nVamos a cargar el arreglo.");
+        validos = loadArr(&arrayfr, DIM);
+        printf("\nIngrese un valor, y le diremos si se encuentra en el arreglo.");
+        scanf("%i", &checknum);
+        if (IsOnArray(arrayfr, validos, checknum) == true)
+        {
+            printf("\nEl valor se encuentra en el arreglo.");
+        }
+        else
+        {
+            printf("\nEl valor no se encuentra en el arreglo.");
+        }
+        system("PAUSE");
+        break;
+
+    case 7:
+        printf("\nTeniendo este arreglo ordenado, ingrese un caracter y se insertara de forma ordenada.  ");
+        showArrChar(arrayforril, 6);
+        printf("\nElemento a insertar: ");
+        scanf(" %c", &datochar);
+        insert(arrayforril,6, datochar);
+        printf("\nSU ARRAY ------");
+        showArrChar(arrayforril, 7);
+        break;
+    case 8:
+        printf("\nPrimero, vamos a cargar el arreglo.\n");
+        validos = loadArrChar(&arrayfr, DIM);
+        printf("El maximo caracter de el arreglo es %c", BiggestChar(arrayfr, validos));
+        break;
+    case 9:
+        printf("\nPrimero, vamos a cargar el arreglo.\n");
+        validos = loadArrChar(&arrayfr, DIM);
+        if (palindromic(arrayfr, validos))
+        {
+            printf("El arreglo es capicua.\n\n");
+        } else{
+            printf("El arreglo no es capicua.\n\n");
+        }
+        break;
+    case 10:
+        printf("\nPrimero, vamos a cargar el arreglo.\n");
+        validos = loadArr(arrayfr, DIM);
+        printf("El array cargado:");
+        showArr(arrayfr, validos);
+        system("PAUSE");
+        flipArr(arrayfr,validos);
+        printf("\nSu arreglo invertido: ");
+        showArr(arrayfr, validos);
+        break;
+
+    }
+    return 0;
+}
+
+int loadArr(int array1[], int dim)
+{
+    char Continue = 'y';
+    int i = 0; // contar las iteraciones
+
+    while(Continue == 'y' && i<dim)
+    {
+        printf("\nIngrese un elemento para su array: ");
+        scanf("%i", &array1[i]);
+        printf("\nDesea continuar agregando elementos? (y/n)");
+        fflush(stdin);
+        scanf(" %c", &Continue);
+        i++;
+    }
+    return i;  ///----- los validos
+}
+
+int loadArrChar(char array1[], int dim)
+{
+    char Continue = 'y';
+    int i = 0; // contar las iteraciones
+
+    while(Continue == 'y' && i<dim)
+    {
+        printf("\nIngrese un elemento para su array: ");
+        fflush(stdin);
+        scanf("%c", &array1[i]);
+        printf("\nDesea continuar agregando elementos? (y/n)");
+        fflush(stdin);
+        scanf(" %c", &Continue);
+        i++;
+    }
+    return i;  ///----- los validos
+}
+
+void showArr(int array1[], int validos)
+{
+    for(int i=0; i<validos; i++)
+    {
+        printf("\nArray[%i] = %i", i, array1[i]);
+    }
+}
+
+void showArrChar(char array1[], int validos)
+{
+    for(int i=0; i<validos; i++)
+    {
+        printf("\nArray[%i] = %c", i, array1[i]);
+    }
+}
+
+int addElements(int array1[], int validos)
+{
+    int suma = 0;
+
+    for (int i=0; i<validos; i++)
+    {
+        suma += array1[i];
+    }
+
+    return suma;
+}
+
+void ArrayToPila(int array1[], Pila* pila, int validos)
+{
+    int i = 0;
+    while (i<validos)
+    {
+        apilar(pila, array1[i]);
+        i++;
+    }
+}
+
+int loadArrFloat(float array1[], int dim)
+{
+    char Continue = 'y';
+    int i = 0; // contar las iteraciones
+
+    while(Continue == 'y' && i<dim)
+    {
+        printf("\nIngrese un elemento para su array: ");
+        scanf("%f", &array1[i]);
+        printf("\nDesea continuar agregando elementos? (y/n)");
+        fflush(stdin);
+        scanf(" %c", &Continue);
+        i++;
+    }
+    return i;  ///----- los validos
+}
+
+void showArrFloat(float array1[], int validos)
+{
+    for(int i=0; i<validos; i++)
+    {
+        printf("\nArray[%i] = %f", i, array1[i]);
+    }
+}
+
+float addArrayElementsfloaty(float array1[], int validos)
+{
+    float suma = 0.0;
+
+    for (int i=0; i<validos; i++)
+    {
+        suma += array1[i];
+    }
+
+    return suma;
+}
+
+bool IsOnArray(int array1[], int validos, int num)
+{
+    for(int i = 0; i < validos; i++)
+    {
+        if (array1[i] == num)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+int LowestElementPos(int array1[], int validos)
+{
+    int menor = INT_MAX;
+    int pos = array1[0];
+    for(int i = 0; i<validos; i++)
+    {
+        if (array1[i]< menor)
+        {
+            menor = array1[i];
+            pos = i;
+        }
+    }
+    return pos;
+}
+
+int LowestElementPosChar(char array1[], int validos)
+{
+    int i = 0;
+    char menor = array1[i];
+    int pos = array1[0];
+    for(i = 0; i<validos; i++)
+    {
+        if (array1[i]< menor)
+        {
+            menor = array1[i];
+            pos = i;
+        }
+    }
+    return pos;
+}
+
+
+void insert(char array1[], int validos, char dato)
+{
+    int i = validos - 1; //last valid
+    while(i >= 0 && dato < array1[i])
+    {
+        array1[i+1] = array1[i];
+        i--;
+    }
+    array1[i + 1] = dato;
+}
+
+
+
+int BiggestChar(char array1[], int validos)
+{
+    int mayor = 0;
+    for(int i=0; i< validos; i++)
+    {
+        if (array1[i] > mayor)          mayor = array1[i];
+    }
+    return mayor;
+}
+
+bool palindromic(char array1[], int validos)
+{
+    for(int i = 0; i < validos / 2; i++)
+    {
+        if (array1[i] != array1[validos - 1 - i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void flipArr(int array1[],int validos)
+{
+    int i = 0;
+    int j = validos -1;
+
+    int aux = 0;
+
+    while(i < validos/2)
+    {
+        aux = array1[i];
+        array1[i] = array1[j];
+        array1[j] = aux;
+        i++;
+        j--;
+    }
+
+}
+
+
+
+
+
+/* void merge2arrays(char ordenado1[], char ordenado2[], char finalarray[])
+{
+    int i = 0;
+    int j = 0;
+    int r = 0;
+
+    while(ordenado1[i] == 0 || ordenado2[j] == 0)
+    {
+����}
+
+} */
