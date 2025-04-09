@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "pila.h"
+
+void cargarPila(Pila* A);
+void pasarPila (Pila* A, Pila* B);
+void pasarPilaOrdenada (Pila* A, Pila* B);
+int buscarMenorPila(Pila* A);
+
+int main()
+{
+    Pila pila1;
+    Pila pila2;
+    Pila pila3;
+    Pila pila4;
+    inicpila(&pila1);
+    inicpila(&pila2);
+    inicpila(&pila3);
+    inicpila(&pila4);
+
+    int ejercicio = 0;
+    printf("asdasdasd");
+
+    do{
+        system("cls");
+        printf("\n----------");
+        printf("\nLIST MENU");
+        printf("\n-----------");
+        printf("\n1-Cargar Pila");
+        printf("\n2-Mover a otra pila");
+        printf("\n3-Mover a pila de manera ordenada");
+        printf("\n4-");
+        printf("\n5-");
+        printf("\n6-");
+
+        printf("\n0-QUIT");
+        printf("\n\nINGRESA TU OPCION: ");
+        scanf("%d",&ejercicio);
+ 
+        switch(ejercicio) 
+        {
+            case 1:
+                cargarPila(&pila1);
+            break;
+
+            case 2:
+                cargarPila(&pila3);
+                pasarPila(&pila3, &pila4);
+            break;
+
+            case 3:
+                cargarPila(&pila3);
+                pasarPilaOrdenada(&pila3, &pila4);
+            break;
+
+             case 4:
+                 cargarPila(&pila1);
+                 int menor = buscarMenorPila(&pila1);
+                 printf("\nEl valor menor en la pila es: %i", menor);
+             break;
+
+            // case 5:
+
+            // break;
+            
+            // case 6:
+            
+            // break;
+            
+            // case 7:
+            
+            // break;
+            
+            // case 8:
+            
+            // break;
+            
+            // case 9:
+            
+            // break;
+            
+            // case 10:
+            
+            // break;
+            
+            case 0:
+                printf("\n\nTERMINATE THE PROGRAM\n");
+            break;
+
+
+        }
+ 
+    } while(ejercicio!=0);
+
+
+    return 0;
+}
+
+
+void cargarPila(Pila* A)
+{
+    char Continue = 'y';
+    while(Continue == 'y')
+    {
+        leer(A);
+        printf("Desea ingresar otro valor? (y/n)  ");
+        fflush(stdin);
+    }
+    mostrar(A);
+    system("PAUSE");
+}
+
+void pasarPila (Pila* A, Pila* B)
+{
+    printf("Vamos a pasar todos los elementos de la Pila A, a la Pila B");
+    printf("\nPILA 1 ---------\n");
+    mostrar(A);
+    while(!pilavacia(A))
+    {
+        apilar(B, desapilar(A));
+    }
+
+    printf("\nPILA 2 ---------\n");
+    mostrar(B);
+    system("PAUSE");
+}
+
+void pasarPilaOrdenada (Pila* A, Pila* B)
+{
+    printf("Vamos a pasar todos los elementos de forma ordenada a otra pila\n");
+
+    Pila descartable;
+    inicpila(&descartable);
+
+    while(!pilavacia(A))
+    {
+        apilar(&descartable, desapilar(A));
+    }
+
+    while(!pilavacia(&descartable))
+    {
+        apilar(B, desapilar(&descartable));
+    }
+    printf("Pila b\n");
+    mostrar(B);
+    system("PAUSE");
+}
+
+int buscarMenorPila(Pila* A)
+{   
+    Pila descartable;
+    inicpila(&descartable);
+    int menor = INT_MAX;
+
+    while (!pilavacia(A))
+    {
+        if (tope(A) < menor)
+        {
+            menor = tope(A);
+        }
+        apilar(&descartable, desapilar(A));
+    }
+
+    while (!pilavacia(&descartable))
+    {
+        apilar(A, desapilar(&descartable));
+    }
+        return menor;
+}
