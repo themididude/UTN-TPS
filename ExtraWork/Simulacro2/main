@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "pila.h"
+
+#define DIMF 2
+#define DIMC 50
+
+/*
+1- Se desea crear una función para la carga de los elementos en la pila, al finalizar la carga,
+tenemos que tener guardada la información de cuánto fue el monto total de las compras y
+cuántas compras hubo. (pensar cómo conservar esa información, no tiene que mostrarse)
+2- Ordenar los elementos de la pila de menor a mayor, por método de inserción.
+3- Ahora que están ordenados, tenemos que guardar en un arreglo la cantidad de compras
+según la cantidad de dígitos. Es decir, en la primera posición, todas las compras de un
+dígito, en la segunda, de dos dígitos, etc. Recuerden que están ordenados, así que una vez
+que cambian la cantidad de dígitos, pueden moverse de posición en el arreglo. (Viene con
+ayuda en el pizarrón)
+4- Calcular cuál fue el rango de compras que mayor monto acumulado tuvo, y devolver esa
+información.
+5- Calcular cuánto porcentaje del total representa un determinado rango de valores que se
+solicite(por ejemplo, cuánto porcentaje del total representan la cantidad de compras que
+hayan sido entre $10 y $99). Tengan en cuenta que la cantidad total de las compras es
+información que ya tienen.
+6- Hacer una función que verifique si un nombre existe en una arreglo de strings. Luego
+hacer una función que cargue un arreglo de strings, pero cada vez que cargamos una
+palabra, verifique que la palabra no exista, y si existe no la cargue y le avise al usuario que
+está repetida. También hay que hacer una función para mostrar dicho arreglo de strings.
+Para finalizar, deben realizar un main que llame a todas las funciones anteriores y
+demuestre su correcto funcionamiento, debiendo ejecutar sin lanzar errores.
+
+*/
+
+
+//prototipao y tal
+int loadPila(Pila* A, int* monto_total);
+
+int main()
+{
+    ///variables and stuff
+    Pila pilovich;
+    inicpila(&pilovich);
+
+    Pila pilaOrdenada;
+    inicpila(&pilaOrdenada);
+
+
+    int montoTotal = 0;
+    ////////////////////////////////
+
+    ///// ejercicio 1 /////
+    printf("\nEjercicio 1!\n");
+    int totalCart = loadPila(&pilovich, &montoTotal);
+    printf("\n%i", montoTotal);
+    //system("PAUSE");
+    //system("cls");
+
+    ///// ejercicio 2 /////
+    printf("\Ejercicio 2!");
+    printf("\nOrdenaremos la pila ingresada en el ejercicio anterior!");
+   // system("PAUSE");
+    insertionSort(&pilovich, &pilaOrdenada);
+    mostrar(&pilaOrdenada);
+    //system("PAUSE");
+    //system("cls");
+    return 0;
+}
+
+int loadPila(Pila* A, int* monto_total)
+{
+    int ammount = 0;
+    char keepbuyin = 'y';
+
+    while(keepbuyin == 'y')
+    {
+        leer(A);
+        ammount++;
+
+        (*monto_total) += tope(A);
+
+        printf("\nAgregar mas compras? (y/n): ");
+        scanf(" %c", &keepbuyin);
+    }
+    return ammount; //cuantos items
+}
+
+void insertDato(Pila*Ordenada, int dato)
+{
+    Pila aux;
+    inicpila(&aux);
+
+    while(!pilavacia(Ordenada) && dato < tope(Ordenada))
+    {
+        mostrar(Ordenada);
+        printf("dato: %i\n",dato);
+        apilar(&aux, desapilar(Ordenada));
+    }
+    apilar(Ordenada, dato);
+
+    //goback!!!
+    while(!pilavacia(&aux))
+    {
+        apilar(Ordenada, desapilar(&aux));
+    }
+}
+
+void insertionSort(Pila* A, Pila* B) //b es la ordenada
+{
+    while(!pilavacia(A))      //acordalse de ponerle ampersand a A
+    {
+        insertDato(B, desapilar(A));
+    }
+}
