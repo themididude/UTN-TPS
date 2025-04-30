@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define DIM 30
+
+///===----- Estructuras and such -----===///
+typedef struct {
+    char nombre[30];
+    int matricula;
+    char genero; //m, f, o
+} Alumno;
+///===---------------------------------===///
+
+
+
+
+///===----- prototipao -----===///
+Alumno cargarAlumno();
+int cargarAlumnos(Alumno array1[DIM]);
+void mostrarAlumno(Alumno a);
+void mostrarAlumnos(Alumno array1[DIM], int validos);
+int posMatricula(Alumno array1[DIM], int validos, int matricula);
+void MostrarPorMatricula(Alumno array1[DIM], int validos);
+int LowestPos(Alumno array1[DIM], int validos, int u);
+void selectionSort(Alumno array1[DIM], int validos);
+
+///===---------------------===///
+
+
+int main()
+{
+    Alumno alumnos[DIM];
+
+    int validos = cargarAlumnos(alumnos);
+    mostrarAlumnos(alumnos, validos);
+    printf("\n-------------------------");
+    MostrarPorMatricula(alumnos, validos);
+    printf("\n-------------selectionsort------------\n");
+    selectionSort(alumnos, validos);
+    mostrarAlumnos(alumnos, validos);
+
+    return 0;
+}
+
+
+Alumno cargarAlumno()
+{
+    Alumno a;
+
+    printf("\nIngrese el nombre del alumno: ");
+    scanf(" %s", &a.nombre);
+    printf("\nIngrese la matricula de [ %s ]: ", a.nombre);
+    scanf("%i", &a.matricula);
+    printf("\nIngrese el genero de [ %s ] (m/f/o): ", a.nombre);
+    scanf(" %c", &a.genero);
+
+    return a;
+}
+
+
+int cargarAlumnos(Alumno array1[DIM])
+{
+    int i = 0;
+    char keepgoing = 's';
+
+    while(i < DIM && keepgoing == 's')
+    {
+        array1[i] = cargarAlumno();
+        i++;
+
+        printf("\nSeguir ingresando datos? (s/n): ");
+        scanf(" %c", &keepgoing);
+
+    }
+    return i;   // validos
+}
+
+void mostrarAlumno(Alumno a)
+{
+    printf("\n[ %i ]   | [ %s ] | [ %c ]", a.matricula, a.nombre, a.genero);
+}
+
+void mostrarAlumnos(Alumno array1[DIM], int validos)
+{
+    printf("\n===--------------------===");
+    printf("\nMATRICULA | NOMBRES | GENERO");
+
+    for(int i = 0; i < validos; i++)
+    {
+        mostrarAlumno(array1[i]);
+    }
+}
+
+int posMatricula(Alumno array1[DIM], int validos, int matricula)
+{
+    for(int i = 0; i < validos; i++)
+    {
+        if (array1[i].matricula == matricula)
+        {
+            return i; ///pos
+        }
+    }
+    return -1; // not found
+}
+
+void MostrarPorMatricula(Alumno array1[DIM], int validos)
+{
+    int matricula = 0;
+    printf("\nMatricula a buscar: ");
+    scanf("%i", &matricula);
+
+    int pos = posMatricula(array1, validos, matricula);
+
+    printf("\n[ %i ]   | [ %s ] | [ %c ]", array1[pos].matricula, array1[pos].nombre, array1[pos].genero);
+}
+
+
+int LowestPos(Alumno array1[DIM], int validos, int u)
+{
+    int menor = array1[u].matricula;
+    int posmenor = u; //como para comparar
+    for(int i = u; i < validos; i++)
+    {
+        if(menor > array1[i].matricula)
+        {
+            posmenor = i;
+        }
+    }
+    return posmenor;
+}
+
+void selectionSort(Alumno array1[DIM], int validos)
+{
+    int posmenor;
+    Alumno aux;
+    for(int i=0; i<validos; i++)
+    {
+        posmenor = LowestPos(array1, validos, i);
+
+        aux = array1[i];
+        array1[i] = array1[posmenor];
+        array1[posmenor] = aux;
+    }
+}
