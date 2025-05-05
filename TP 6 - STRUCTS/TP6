@@ -24,22 +24,92 @@ int posMatricula(Alumno array1[DIM], int validos, int matricula);
 void MostrarPorMatricula(Alumno array1[DIM], int validos);
 int LowestPos(Alumno array1[DIM], int validos, int u);
 void selectionSort(Alumno array1[DIM], int validos);
+void CheckPrintGender(Alumno array1[DIM], int validos, char gender, int u);
+void printGenderStudents(Alumno array1[DIM], int validos);
+int insertarOrdenadoMAT(Alumno array1[DIM], int validos, Alumno dato);
+void insertarOrdenado(Alumno array1[DIM], int validos, Alumno dato);
+void insertionsort(Alumno array1[DIM], int validos);
+int countGender(Alumno array1[DIM], int validos, char gender);
 
 ///===---------------------===///
 
 
 int main()
 {
+
     Alumno alumnos[DIM];
+    char gender;
+    int validos = 0;
+    int howmanygender;
+    int running = 1;
 
-    int validos = cargarAlumnos(alumnos);
-    mostrarAlumnos(alumnos, validos);
-    printf("\n-------------------------");
-    MostrarPorMatricula(alumnos, validos);
-    printf("\n-------------selectionsort------------\n");
-    selectionSort(alumnos, validos);
-    mostrarAlumnos(alumnos, validos);
+    while(running = 1)
+    {
+    printf("\nBienvenido a su programa! Ingrese el ejercicio que desee");
+    printf("\nEjercicio 1: Cargar y mostrar (necesario la primera vez)");
+    printf("\nEjercicio 2: Solo mostrar!");
+    printf("\nEjercicio 3: Mostrar un alumno por su matricula");
+    printf("\nEjercicio 4: Selection Sort en el listado");
+    printf("\nEjercicio 5: Mostrar alumnos de un genero");
+    printf("\nEjercicio 6: Insertar un nuevo dato");
+    printf("\nEjercicio 7: Insertion sort en el listado, usando nombre");
+    printf("\nEjercicio 8: Contar alumnos de un genero");
 
+    int ejercicio = 0;
+    printf("\nIngrese una opcion: ");
+    scanf("%i", &ejercicio);
+
+    switch(ejercicio)
+    {
+        case 1:
+            printf("\n------------cargar, mostrar, etc-------------");
+            validos = cargarAlumnos(alumnos);
+            mostrarAlumnos(alumnos, validos);
+            break;
+        case 2:
+            mostrarAlumnos(alumnos, validos);
+            break;
+        case 3:
+            printf("\n------------mostrar por matricula-------------"); //ejercicio 3
+            MostrarPorMatricula(alumnos, validos);
+            break;
+        case 4:
+            printf("\n-------------selectionsort------------\n"); //ejercicio 4
+            selectionSort(alumnos, validos);
+            mostrarAlumnos(alumnos, validos);
+            break;
+        case 5:
+            printf("\n-------------find a gender------------\n"); //----- ejercicio 5
+            printGenderStudents(alumnos,validos);
+            break;
+        case 6:
+            printf("\n-------------insertar alumno ordenado (matricula)------------\n"); //----- ejercicio 6
+            printf("\nIngresaremos los datos del nuevo alumno.");
+            Alumno dato = cargarAlumno();
+            validos += insertarOrdenadoMAT(alumnos, validos, dato);
+            mostrarAlumnos(alumnos,validos);
+            break;
+        case 7:
+            printf("\n-------------insertionsort (por nombre)------------\n"); //----- ejercicio 7
+            printf("\nAhora, ordenaremos el listado por nombre");
+            insertionsort(alumnos,validos);
+            mostrarAlumnos(alumnos,validos);
+            break;
+        case 8:
+            printf("\n-------------count gender------------\n"); //----- ejercicio 7
+            printf("\nAhora, contaremos cuantas personas de x genero hay.");
+            printf("\nIngrese el genero a buscar! (m/f/o): ");
+            scanf(" %c", &gender);
+            howmanygender = countGender(alumnos,validos, gender);
+            printf("\nHay %i personas del genero %c", howmanygender, gender);
+            break;
+        default:
+            printf("\nOpcion invalida.");
+            break;
+    }
+        system("PAUSE");
+        system("cls");
+    }
     return 0;
 }
 
@@ -54,7 +124,6 @@ Alumno cargarAlumno()
     scanf("%i", &a.matricula);
     printf("\nIngrese el genero de [ %s ] (m/f/o): ", a.nombre);
     scanf(" %c", &a.genero);
-
     return a;
 }
 
@@ -142,4 +211,77 @@ void selectionSort(Alumno array1[DIM], int validos)
         array1[i] = array1[posmenor];
         array1[posmenor] = aux;
     }
+}
+
+void CheckPrintGender(Alumno array1[DIM], int validos, char gender, int u)
+{
+        if(array1[u].genero == gender)
+        {
+            mostrarAlumno(array1[u]);
+        }
+}
+
+void printGenderStudents(Alumno array1[DIM], int validos)
+{
+    char gender;
+    printf("\nIngrese el genero a imprimir! (m/f/o): ");
+    scanf(" %c", &gender);
+
+
+    printf("\n===--------------------===");
+    printf("\nMATRICULA | NOMBRES | GENERO");
+
+    for(int i = 0; i < validos; i++)
+    {
+        CheckPrintGender(array1, validos, gender, i);
+    }
+}
+
+int insertarOrdenadoMAT(Alumno array1[DIM], int validos, Alumno dato)
+{
+    int i = validos -1;
+
+    while(i < validos && dato.matricula < array1[i].matricula)
+    {
+        array1[i+1] = array1[i];
+        i--;
+    }
+    array1[i + 1] = dato;
+
+    return 1;   /// como insertamos un elemento nuevo creado, vamos a sumarle este return a validos en el main
+}
+
+void insertarOrdenado(Alumno array1[DIM], int validos, Alumno dato)
+{
+    int i = validos -1;
+
+    while(i >= 0 && strcmp(dato.nombre, array1[i].nombre) < 0)
+    {
+        array1[i+1] = array1[i];
+        i--;
+    }
+    array1[i + 1] = dato;
+}
+
+void insertionsort(Alumno array1[DIM], int validos)
+{
+    int i = 0;
+    while(i < validos -1)
+    {
+        insertarOrdenado(array1, validos, array1[i+1]);
+        i++;
+    }
+}
+
+int countGender(Alumno array1[DIM], int validos, char gender)
+{
+    int counter = 0;
+    for(int i = 0; i < validos; i++)
+    {
+        if(array1[i].genero == gender)
+        {
+            counter++;
+        }
+    }
+    return counter;
 }
