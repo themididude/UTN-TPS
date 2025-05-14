@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "pila.h"
 
 typedef struct
 {
@@ -13,28 +14,56 @@ typedef struct
 
 Alumno cargarAlumno();
 void loadStudents(char nombre_archivo[]);
+void insanePila(Pila* A, char nombre_archivo[]);
 
 int main()
 {
+
+    ///-----------variables------------//
+    int ejercicio = 0;
     char name[] = "file.dat";
     char namealumnos[] = "alumnos.dat";
-    int validos = 0;
+    int ammount;
+    Pila pilovich;
+    inicpila(&pilovich);
 
-    //addfile(name);
-    //showfile(name);
-    //puts("\n-----------------------");
+    ///--------------------------------//
 
-    //int ammount = howmany(name);
-    //printf("\nAmmount of elements: %i", ammount);
-    //puts("\n-----------------------");
+    puts("\n--------OPCIONES---------");
+    puts("\n1.Ejercicio 1, 2, y 3: Cargar un archivo, mostrarlo, contar los elementos");
+    puts("\n2.Ejercicio 4 y 5: Cargar y mostrar un registro de alumnos");
+    puts("\n3.Ejercicio 6: Agregar un alumno extra al archivo de alumnos");
+    puts("\n4.Ejercicio 7: Pasar el legajo de los mayores de edad a una pila");
+    puts("\n\nIngrese una opcion (primer numero): ");
+    scanf("%i", &ejercicio);
 
-    loadStudents(namealumnos);
-    mostrarAlumnos(namealumnos);
-    puts("\nAgreguemos un alumno mas!");
-    addAStudent(namealumnos);
-    mostrarAlumnos(namealumnos);
+    switch(ejercicio)
+    {
+    case 1:
+        addfile(name);
+        showfile(name);
+        ammount = howmany(name);
+        printf("\nAmmount of elements: %i", ammount);
+        break;
+    case 2:
+        loadStudents(namealumnos);
+        mostrarAlumnos(namealumnos);
+        break;
+    case 3:
+        puts("\nAgreguemos un alumno mas!");
+        addAStudent(namealumnos);
+        mostrarAlumnos(namealumnos);
+        break;
+    case 4:
+        insanePila(&pilovich, namealumnos);
+        printf("\nLegajo de los alumnos mayores de edad: ");
+        mostrar(&pilovich);
+        break;
 
-
+    default:
+        printf("\nError FATAL........1.1..1.: opcion invalida");
+        break;
+    }
 
     return 0;
 }
@@ -137,8 +166,6 @@ void loadStudents(char nombre_archivo[])
     }
 
 }
-
-
 Alumno cargarAlumno()
 {
     Alumno a;
@@ -197,4 +224,23 @@ void addAStudent(char nombre_archivo[])
         printf("\nEl archivo no existe");
         fclose(archivin);
     }
+}
+
+void insanePila(Pila* A, char nombre_archivo[])
+{
+    Alumno alumnito;
+    int integer = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.anio >= 18)
+        {
+            apilar(A, alumnito.legajo);
+        }
+    }
+
+    fclose(archivin);
 }
