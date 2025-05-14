@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
-     int legajo;
-     char nombre[30];
-     int edad;
-     int anio;
+typedef struct
+{
+    int legajo;
+    char nombre[30];
+    int edad;
+    int anio;
 
 } Alumno;
 
@@ -16,6 +17,9 @@ void loadStudents(char nombre_archivo[]);
 int main()
 {
     char name[] = "file.dat";
+    char namealumnos[] = "alumnos.dat";
+    int validos = 0;
+
     //addfile(name);
     //showfile(name);
     //puts("\n-----------------------");
@@ -24,8 +28,14 @@ int main()
     //printf("\nAmmount of elements: %i", ammount);
     //puts("\n-----------------------");
 
-    loadStudents(name);
-    showfile(name);
+    loadStudents(namealumnos);
+    mostrarAlumnos(namealumnos);
+    puts("\nAgreguemos un alumno mas!");
+    addAStudent(namealumnos);
+    mostrarAlumnos(namealumnos);
+
+
+
     return 0;
 }
 
@@ -44,8 +54,10 @@ void addfile(char nombre_archivo[])
         fwrite(&yep, sizeof(int), 1, archivin);
         fclose(archivin);
 
-    } else {
-            printf("\nNo se ha encontrado el archivo!");
+    }
+    else
+    {
+        printf("\nNo se ha encontrado el archivo!");
     }
 }
 
@@ -58,13 +70,9 @@ void showfile(char nombre_archivo[])
 
     if(archivin != NULL)
     {
-        while(!feof(archivin))
+        while(fread(&yep, sizeof(int),1, archivin) > 0)
         {
-            fread(&yep, sizeof(int),1, archivin);
-            if (!feof(archivin))
-            {
-                printf("\nINT: %i", yep);
-            }
+            printf("\nINT: %i", yep);
         }
         fclose(archivin);
     }
@@ -82,7 +90,7 @@ int howmany(char nombre_archivo[])
     FILE *archivin;
     archivin = fopen(nombre_archivo, "rb");
 
-     if(archivin != NULL)
+    if(archivin != NULL)
     {
         printf("\nbeep beep starting count . . . . .");
         while(!feof(archivin))
@@ -113,17 +121,24 @@ void loadStudents(char nombre_archivo[])
     if(archivin != NULL)
     {
         printf("\nEl archivo ya existe");
+        fclose(archivin);
 
-    } else {
-        printf("\nNo se ha encontrado el archivo! creandolo...");
+    }
+    else
+    {
+        printf("\nCreando el archivo . . . ");
         archivin = fopen(nombre_archivo, "wb");
         for(int i = 0; i < count; i++)
         {
             a = cargarAlumno();
+            fwrite(&a,sizeof(Alumno),1,archivin);
         }
         fclose(archivin);
     }
+
 }
+
+
 Alumno cargarAlumno()
 {
     Alumno a;
@@ -136,5 +151,50 @@ Alumno cargarAlumno()
     scanf("%i", &a.edad);
     printf("\nIngrese el anio de [ %s ]: ", a.nombre);
     scanf(" %c", &a.anio);
+    fflush(stdin);
     return a;
+}
+
+void mostrarAlumno(Alumno a)
+{
+    printf("\n[ %i ] [ %s ] [ %i ] [ %i ]", a.legajo, a.nombre, a.edad, a.anio);
+}
+
+void mostrarAlumnos(char nombre_archivo[])
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    printf("\n===------------------------===");
+    printf("\nLEGAJO | NOMBRES | EDAD | ANIO");
+
+    while(fread(&a, sizeof(Alumno), 1, archivin) )
+    {
+        mostrarAlumno(a);
+    }
+    fclose(archivin);
+    printf("\n===------------------------===");
+}
+
+void addAStudent(char nombre_archivo[])
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if(archivin != NULL)
+    {
+        archivin = fopen(nombre_archivo, "ab");
+        a = cargarAlumno();
+        fwrite(&a,sizeof(Alumno),1,archivin);
+        fclose(archivin);
+    }
+    else
+    {
+        printf("\nEl archivo no existe");
+        fclose(archivin);
+    }
 }
