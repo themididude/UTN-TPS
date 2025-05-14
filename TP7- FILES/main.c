@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "pila.h"
 
+
 typedef struct
 {
     int legajo;
@@ -24,6 +25,8 @@ int main()
     char name[] = "file.dat";
     char namealumnos[] = "alumnos.dat";
     int ammount;
+    int age = 0;
+    int olderPeople = 0;
     Pila pilovich;
     inicpila(&pilovich);
 
@@ -34,6 +37,7 @@ int main()
     puts("\n2.Ejercicio 4 y 5: Cargar y mostrar un registro de alumnos");
     puts("\n3.Ejercicio 6: Agregar un alumno extra al archivo de alumnos");
     puts("\n4.Ejercicio 7: Pasar el legajo de los mayores de edad a una pila");
+    puts("\n5.Ejercicio 8: Contar alumnos mayores a una edad que usted elija");
     puts("\n\nIngrese una opcion (primer numero): ");
     scanf("%i", &ejercicio);
 
@@ -58,6 +62,12 @@ int main()
         insanePila(&pilovich, namealumnos);
         printf("\nLegajo de los alumnos mayores de edad: ");
         mostrar(&pilovich);
+        break;
+    case 5:
+        printf("\nIngrese una edad a buscar: ");
+        scanf("%i", &age);
+        olderPeople = HowManyOlder(namealumnos, age);
+        printf("\nCantidad de personas mayores a %i: %i", age, olderPeople);
         break;
 
     default:
@@ -166,19 +176,21 @@ void loadStudents(char nombre_archivo[])
     }
 
 }
+
 Alumno cargarAlumno()
 {
     Alumno a;
 
+    fflush(stdin);
     printf("\nIngrese el nombre del alumno: ");
-    scanf(" %s", &a.nombre);
+    gets(a.nombre);
     printf("\nIngrese la legajo de [ %s ]: ", a.nombre);
     scanf("%i", &a.legajo);
     printf("\nIngrese la edad de [ %s ]: ", a.nombre);
     scanf("%i", &a.edad);
     printf("\nIngrese el anio de [ %s ]: ", a.nombre);
     scanf(" %c", &a.anio);
-    fflush(stdin);
+
     return a;
 }
 
@@ -236,11 +248,31 @@ void insanePila(Pila* A, char nombre_archivo[])
 
     while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
     {
-        if(alumnito.anio >= 18)
+        if(alumnito.edad >= 18)
         {
             apilar(A, alumnito.legajo);
         }
     }
 
     fclose(archivin);
+}
+
+int HowManyOlder(char nombre_archivo[], int age)
+{
+    Alumno alumnito;
+    int count = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad > age)
+        {
+            count++;
+        }
+    }
+    fclose(archivin);
+
+    return count;
 }
