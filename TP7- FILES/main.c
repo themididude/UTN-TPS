@@ -26,6 +26,8 @@ int main()
     char namealumnos[] = "alumnos.dat";
     int ammount;
     int age = 0;
+    int firstAge = 0;
+    int secondAge = 0;
     int olderPeople = 0;
     Pila pilovich;
     inicpila(&pilovich);
@@ -38,6 +40,7 @@ int main()
     puts("\n3.Ejercicio 6: Agregar un alumno extra al archivo de alumnos");
     puts("\n4.Ejercicio 7: Pasar el legajo de los mayores de edad a una pila");
     puts("\n5.Ejercicio 8: Contar alumnos mayores a una edad que usted elija");
+    puts("\n6.Ejercicio 9: Mostrar alumnos entre un rango de edad");
     puts("\n\nIngrese una opcion (primer numero): ");
     scanf("%i", &ejercicio);
 
@@ -68,6 +71,14 @@ int main()
         scanf("%i", &age);
         olderPeople = HowManyOlder(namealumnos, age);
         printf("\nCantidad de personas mayores a %i: %i", age, olderPeople);
+        break;
+    case 6:
+        printf("\nIngrese la edad minima: ");
+        scanf("%i", &firstAge);
+        printf("\nIngrese la edad maxima: ");
+        scanf("%i", &secondAge);
+        printf("\nAlumnos entre %i - %i anios:",firstAge, secondAge);
+        HowManyOlderRange(namealumnos, firstAge, secondAge);
         break;
 
     default:
@@ -270,6 +281,26 @@ int HowManyOlder(char nombre_archivo[], int age)
         if(alumnito.edad > age)
         {
             count++;
+        }
+    }
+    fclose(archivin);
+
+    return count;
+}
+
+int HowManyOlderRange(char nombre_archivo[], int age1, int age2)
+{
+    Alumno alumnito;
+    int count = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad > age1 && alumnito.edad < age2)
+        {
+            mostrarAlumno(alumnito);
         }
     }
     fclose(archivin);
