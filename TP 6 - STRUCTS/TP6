@@ -1,156 +1,422 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "pila.h"
 
-#define DIM 30
+#define DIM 15
 
-///===----- Estructuras and such -----===///
-typedef struct {
+
+typedef struct
+{
+    int legajo;
     char nombre[30];
-    int matricula;
-    char genero; //m, f, o
+    int edad;
+    int anio;
+
 } Alumno;
-///===---------------------------------===///
 
 
-
-
-///===----- prototipao -----===///
 Alumno cargarAlumno();
-int cargarAlumnos(Alumno array1[DIM]);
-void mostrarAlumno(Alumno a);
-void mostrarAlumnos(Alumno array1[DIM], int validos);
-int posMatricula(Alumno array1[DIM], int validos, int matricula);
-void MostrarPorMatricula(Alumno array1[DIM], int validos);
-int LowestPos(Alumno array1[DIM], int validos, int u);
-void selectionSort(Alumno array1[DIM], int validos);
-void CheckPrintGender(Alumno array1[DIM], int validos, char gender, int u);
-void printGenderStudents(Alumno array1[DIM], int validos);
-int insertarOrdenadoMAT(Alumno array1[DIM], int validos, Alumno dato);
-void insertarOrdenado(Alumno array1[DIM], int validos, Alumno dato);
-void insertionsort(Alumno array1[DIM], int validos);
-int countGender(Alumno array1[DIM], int validos, char gender);
-
-///===---------------------===///
-
+void loadStudents(char nombre_archivo[]);
+void insanePila(Pila* A, char nombre_archivo[]);
 
 int main()
 {
 
-    Alumno alumnos[DIM];
-    char gender;
-    int validos = 0;
-    int howmanygender;
-    int running = 1;
-
-    while(running = 1)
-    {
-    printf("\nBienvenido a su programa! Ingrese el ejercicio que desee");
-    printf("\nEjercicio 1: Cargar y mostrar (necesario la primera vez)");
-    printf("\nEjercicio 2: Solo mostrar!");
-    printf("\nEjercicio 3: Mostrar un alumno por su matricula");
-    printf("\nEjercicio 4: Selection Sort en el listado");
-    printf("\nEjercicio 5: Mostrar alumnos de un genero");
-    printf("\nEjercicio 6: Insertar un nuevo dato");
-    printf("\nEjercicio 7: Insertion sort en el listado, usando nombre");
-    printf("\nEjercicio 8: Contar alumnos de un genero");
-
+    ///-----------variables------------//
     int ejercicio = 0;
-    printf("\nIngrese una opcion: ");
+    char name[] = "file.dat";
+    char namealumnos[] = "alumnos.dat";
+    int ammount;
+    int age = 0;
+    int firstAge = 0;
+    int secondAge = 0;
+    int olderPeople = 0;
+    int yearSearch = 0;
+    int yearCount = 0;
+    Alumno arrayAlumnos[DIM];
+    int validosArray = 0;
+
+    Pila pilovich;
+    inicpila(&pilovich);
+
+    ///--------------------------------//
+
+    puts("\n----------------OPCIONES-----------------");
+    puts("\n1.Ejercicio 1, 2, y 3: Cargar un archivo, mostrarlo, contar los elementos");
+    puts("\n2.Ejercicio 4 y 5: Cargar y mostrar un registro de alumnos");
+    puts("\n3.Ejercicio 6: Agregar un alumno extra al archivo de alumnos");
+    puts("\n4.Ejercicio 7: Pasar el legajo de los mayores de edad a una pila");
+    puts("\n5.Ejercicio 8: Contar alumnos mayores a una edad que usted elija");
+    puts("\n6.Ejercicio 9: Mostrar alumnos entre un rango de edad");
+    puts("\n7.Ejercicio 10: Mostrar el alumno mas grande");
+    puts("\n8.Ejercicio 11: Contar alumnos que cursan un anio");
+    puts("\n9.Ejercicio 12: Pasar de array a archivo/achivo a array + filtros");
+    puts("\n\nIngrese una opcion (primer numero): ");
     scanf("%i", &ejercicio);
 
     switch(ejercicio)
     {
-        case 1:
-            printf("\n------------cargar, mostrar, etc-------------");
-            validos = cargarAlumnos(alumnos);
-            mostrarAlumnos(alumnos, validos);
-            break;
-        case 2:
-            mostrarAlumnos(alumnos, validos);
-            break;
-        case 3:
-            printf("\n------------mostrar por matricula-------------"); //ejercicio 3
-            MostrarPorMatricula(alumnos, validos);
-            break;
-        case 4:
-            printf("\n-------------selectionsort------------\n"); //ejercicio 4
-            selectionSort(alumnos, validos);
-            mostrarAlumnos(alumnos, validos);
-            break;
-        case 5:
-            printf("\n-------------find a gender------------\n"); //----- ejercicio 5
-            printGenderStudents(alumnos,validos);
-            break;
-        case 6:
-            printf("\n-------------insertar alumno ordenado (matricula)------------\n"); //----- ejercicio 6
-            printf("\nIngresaremos los datos del nuevo alumno.");
-            Alumno dato = cargarAlumno();
-            validos += insertarOrdenadoMAT(alumnos, validos, dato);
-            mostrarAlumnos(alumnos,validos);
-            break;
-        case 7:
-            printf("\n-------------insertionsort (por nombre)------------\n"); //----- ejercicio 7
-            printf("\nAhora, ordenaremos el listado por nombre");
-            insertionsort(alumnos,validos);
-            mostrarAlumnos(alumnos,validos);
-            break;
-        case 8:
-            printf("\n-------------count gender------------\n"); //----- ejercicio 7
-            printf("\nAhora, contaremos cuantas personas de x genero hay.");
-            printf("\nIngrese el genero a buscar! (m/f/o): ");
-            scanf(" %c", &gender);
-            howmanygender = countGender(alumnos,validos, gender);
-            printf("\nHay %i personas del genero %c", howmanygender, gender);
-            break;
-        default:
-            printf("\nOpcion invalida.");
-            break;
+    case 1:
+        addfile(name);
+        showfile(name);
+        ammount = howmany(name);
+        printf("\nAmmount of elements: %i", ammount);
+        break;
+    case 2:
+        loadStudents(namealumnos);
+        mostrarAlumnos(namealumnos);
+        break;
+    case 3:
+        puts("\nAgreguemos un alumno mas!");
+        addAStudent(namealumnos);
+        mostrarAlumnos(namealumnos);
+        break;
+    case 4:
+        insanePila(&pilovich, namealumnos);
+        printf("\nLegajo de los alumnos mayores de edad: ");
+        mostrar(&pilovich);
+        break;
+    case 5:
+        printf("\nIngrese una edad a buscar: ");
+        scanf("%i", &age);
+        olderPeople = HowManyOlder(namealumnos, age);
+        printf("\nCantidad de personas mayores a %i: %i", age, olderPeople);
+        break;
+    case 6:
+        printf("\nIngrese la edad minima: ");
+        scanf("%i", &firstAge);
+        printf("\nIngrese la edad maxima: ");
+        scanf("%i", &secondAge);
+        printf("\nAlumnos entre %i - %i anios:",firstAge, secondAge);
+        HowManyOlderRange(namealumnos, firstAge, secondAge);
+        break;
+    case 7:
+        mostrarAlumnos(namealumnos);
+        printf("\nAhora, mostraremos el alumno mas grande: ");
+        mostrarMayor(namealumnos);
+        break;
+    case 8:
+        printf("\nContaremos los alumnos de un anio determinado! Ingrese el anio: ");
+        scanf("%i", &yearSearch);
+        yearCount = contarPorAnio(namealumnos, yearSearch);
+        printf("Cantidad de alumnos: %i", yearCount);
+        break;
+    case 9:
+        printf("\nGuardaremos en el array los alumnos de un anio en especifico!");
+        printf("Ingrese el anio: ");
+        scanf("%i", &yearSearch);
+        validosArray = fileToArray(namealumnos,arrayAlumnos, yearSearch);
+        mostrarAlumnosArray(arrayAlumnos, validosArray);
+
+        break;
+
+    default:
+        printf("\nError FATAL........1.1..1.: opcion invalida");
+        break;
     }
-        system("PAUSE");
-        system("cls");
-    }
+
     return 0;
 }
 
+void addfile(char nombre_archivo[])
+{
+    int yep = 0;
+    ///---- opening it
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "ab");
+
+    if(archivin != NULL)
+    {
+        printf("\nIngrese un int: ");
+        scanf("%i", &yep);
+
+        fwrite(&yep, sizeof(int), 1, archivin);
+        fclose(archivin);
+
+    }
+    else
+    {
+        printf("\nNo se ha encontrado el archivo!");
+    }
+}
+
+void showfile(char nombre_archivo[])
+{
+    int yep = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if(archivin != NULL)
+    {
+        while(fread(&yep, sizeof(int),1, archivin) > 0)
+        {
+            printf("\nINT: %i", yep);
+        }
+        fclose(archivin);
+    }
+    else
+    {
+        printf("\nNo se ha encontrado el archivo!");
+    }
+}
+
+int howmany(char nombre_archivo[])
+{
+    int count = 0;
+    int yep = 0; //idk why
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if(archivin != NULL)
+    {
+        printf("\nbeep beep starting count . . . . .");
+        while(!feof(archivin))
+        {
+            fread(&yep, sizeof(int),1, archivin);
+            if (!feof(archivin))
+            {
+                printf("\nCOUNTED!");
+                count++;
+            }
+        }
+        fclose(archivin);
+    }
+    else
+    {
+        printf("\nNo se ha encontrado el archivo!");
+    }
+    return count;
+}
 
 Alumno cargarAlumno()
 {
     Alumno a;
 
+    fflush(stdin);
     printf("\nIngrese el nombre del alumno: ");
-    scanf(" %s", &a.nombre);
-    printf("\nIngrese la matricula de [ %s ]: ", a.nombre);
-    scanf("%i", &a.matricula);
-    printf("\nIngrese el genero de [ %s ] (m/f/o): ", a.nombre);
-    scanf(" %c", &a.genero);
+    gets(a.nombre);
+    printf("\nIngrese la legajo de [ %s ]: ", a.nombre);
+    scanf("%i", &a.legajo);
+    printf("\nIngrese la edad de [ %s ]: ", a.nombre);
+    scanf("%i", &a.edad);
+    printf("\nIngrese el anio de [ %s ]: ", a.nombre);
+    scanf("%i", &a.anio);
+
     return a;
 }
 
-
-int cargarAlumnos(Alumno array1[DIM])
+void loadStudents(char nombre_archivo[])
 {
-    int i = 0;
-    char keepgoing = 's';
+    int count = 5;
+    Alumno a;
 
-    while(i < DIM && keepgoing == 's')
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+    if(archivin != NULL)
     {
-        array1[i] = cargarAlumno();
-        i++;
-
-        printf("\nSeguir ingresando datos? (s/n): ");
-        scanf(" %c", &keepgoing);
+        printf("\nEl archivo ya existe");
+        fclose(archivin);
 
     }
-    return i;   // validos
+    else
+    {
+        printf("\nCreando el archivo . . . ");
+        archivin = fopen(nombre_archivo, "wb");
+        for(int i = 0; i < count; i++)
+        {
+            a = cargarAlumno();
+            fwrite(&a,sizeof(Alumno),1,archivin);
+        }
+        fclose(archivin);
+    }
+
 }
 
 void mostrarAlumno(Alumno a)
 {
-    printf("\n[ %i ]   | [ %s ] | [ %c ]", a.matricula, a.nombre, a.genero);
+    printf("\n[ %i ] [ %s ] [ %i ] [ %i ]", a.legajo, a.nombre, a.edad, a.anio);
 }
 
-void mostrarAlumnos(Alumno array1[DIM], int validos)
+void mostrarAlumnos(char nombre_archivo[])
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    printf("\n===------------------------===");
+    printf("\nLEGAJO | NOMBRES | EDAD | ANIO");
+
+    while(fread(&a, sizeof(Alumno), 1, archivin) )
+    {
+        mostrarAlumno(a);
+    }
+    fclose(archivin);
+    printf("\n===------------------------===");
+}
+
+void addAStudent(char nombre_archivo[])
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if(archivin != NULL)
+    {
+        archivin = fopen(nombre_archivo, "ab");
+        a = cargarAlumno();
+        fwrite(&a,sizeof(Alumno),1,archivin);
+        fclose(archivin);
+    }
+    else
+    {
+        printf("\nEl archivo no existe");
+        fclose(archivin);
+    }
+}
+
+void insanePila(Pila* A, char nombre_archivo[])
+{
+    Alumno alumnito;
+    int integer = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad >= 18)
+        {
+            apilar(A, alumnito.legajo);
+        }
+    }
+
+    fclose(archivin);
+}
+
+int HowManyOlder(char nombre_archivo[], int age)
+{
+    Alumno alumnito;
+    int count = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad > age)
+        {
+            count++;
+        }
+    }
+    fclose(archivin);
+
+    return count;
+}
+
+int HowManyOlderRange(char nombre_archivo[], int age1, int age2)
+{
+    Alumno alumnito;
+    int count = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad > age1 && alumnito.edad < age2)
+        {
+            mostrarAlumno(alumnito);
+        }
+    }
+    fclose(archivin);
+
+    return count;
+}
+
+void printPorLegajo(char nombre_archivo[], int legajo)
+{
+    Alumno alumnito;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(legajo == alumnito.legajo)
+        {
+            mostrarAlumno(alumnito);
+        }
+    }
+    fclose(archivin);
+}
+
+
+
+void mostrarMayor(char nombre_archivo[])
+{
+    Alumno alumnito;
+    int mayor = 0;
+    int maxlegajo = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(alumnito.edad > mayor)
+        {
+            mayor = alumnito.edad;  //por cualquier cosa
+            maxlegajo = alumnito.legajo;
+        }
+    }
+    printPorLegajo(nombre_archivo, maxlegajo);
+    fclose(archivin);
+}
+
+
+int contarPorAnio(char nombre_archivo[], int anio)
+{
+    int count = 0;
+    Alumno alumnito;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+    {
+        if(anio == alumnito.anio)
+        {
+            count++;
+        }
+    }
+    fclose(archivin);
+
+    return count;
+}
+
+void arrayToFile(char nombre_archivo[], Alumno array1[DIM], int validos)
+{
+    int i = 0;
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "ab");
+
+    if (archivin != NULL)
+    {
+        while(i < validos)
+        {
+            fwrite(&array1[i], sizeof(Alumno),1, archivin);
+            i++;
+        }
+    }
+    fclose(archivin);
+}
+
+
+void mostrarAlumnosArray(Alumno array1[DIM], int validos)
 {
     printf("\n===--------------------===");
     printf("\nMATRICULA | NOMBRES | GENERO");
@@ -161,127 +427,39 @@ void mostrarAlumnos(Alumno array1[DIM], int validos)
     }
 }
 
-int posMatricula(Alumno array1[DIM], int validos, int matricula)
+int fileToArray(char nombre_archivo[], Alumno array1[DIM], int anio)
 {
-    for(int i = 0; i < validos; i++)
-    {
-        if (array1[i].matricula == matricula)
-        {
-            return i; ///pos
-        }
-    }
-    return -1; // not found
-}
-
-void MostrarPorMatricula(Alumno array1[DIM], int validos)
-{
-    int matricula = 0;
-    printf("\nMatricula a buscar: ");
-    scanf("%i", &matricula);
-
-    int pos = posMatricula(array1, validos, matricula);
-
-    printf("\n[ %i ]   | [ %s ] | [ %c ]", array1[pos].matricula, array1[pos].nombre, array1[pos].genero);
-}
-
-
-int LowestPos(Alumno array1[DIM], int validos, int u)
-{
-    int menor = array1[u].matricula;
-    int posmenor = u; //como para comparar
-    for(int i = u; i < validos; i++)
-    {
-        if(menor > array1[i].matricula)
-        {
-            posmenor = i;
-        }
-    }
-    return posmenor;
-}
-
-void selectionSort(Alumno array1[DIM], int validos)
-{
-    int posmenor;
-    Alumno aux;
-    for(int i=0; i<validos; i++)
-    {
-        posmenor = LowestPos(array1, validos, i);
-
-        aux = array1[i];
-        array1[i] = array1[posmenor];
-        array1[posmenor] = aux;
-    }
-}
-
-void CheckPrintGender(Alumno array1[DIM], int validos, char gender, int u)
-{
-        if(array1[u].genero == gender)
-        {
-            mostrarAlumno(array1[u]);
-        }
-}
-
-void printGenderStudents(Alumno array1[DIM], int validos)
-{
-    char gender;
-    printf("\nIngrese el genero a imprimir! (m/f/o): ");
-    scanf(" %c", &gender);
-
-
-    printf("\n===--------------------===");
-    printf("\nMATRICULA | NOMBRES | GENERO");
-
-    for(int i = 0; i < validos; i++)
-    {
-        CheckPrintGender(array1, validos, gender, i);
-    }
-}
-
-int insertarOrdenadoMAT(Alumno array1[DIM], int validos, Alumno dato)
-{
-    int i = validos -1;
-
-    while(i < validos && dato.matricula < array1[i].matricula)
-    {
-        array1[i+1] = array1[i];
-        i--;
-    }
-    array1[i + 1] = dato;
-
-    return 1;   /// como insertamos un elemento nuevo creado, vamos a sumarle este return a validos en el main
-}
-
-void insertarOrdenado(Alumno array1[DIM], int validos, Alumno dato)
-{
-    int i = validos -1;
-
-    while(i >= 0 && strcmp(dato.nombre, array1[i].nombre) < 0)
-    {
-        array1[i+1] = array1[i];
-        i--;
-    }
-    array1[i + 1] = dato;
-}
-
-void insertionsort(Alumno array1[DIM], int validos)
-{
+    Alumno alumnito;
     int i = 0;
-    while(i < validos -1)
-    {
-        insertarOrdenado(array1, validos, array1[i+1]);
-        i++;
-    }
-}
 
-int countGender(Alumno array1[DIM], int validos, char gender)
-{
-    int counter = 0;
-    for(int i = 0; i < validos; i++)
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    while(i < DIM && fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
     {
-        if(array1[i].genero == gender)
+        if(anio == alumnito.anio)
         {
-            counter++;
+            array1[i] = alumnito;
+            i++;
         }
     }
-    return counter;
+    fclose(archivin);
+    return i; //validos
+}
+
+int cantRegistros(char nombre_archivo[])
+{
+    int cant = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if (archivin != NULL)
+    {
+        fseek(archivin, sizeof(int))
+
+
+
+
+    }
 }
