@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "pila.h"
 
+#define DIM 15
+
 
 typedef struct
 {
@@ -16,7 +18,7 @@ typedef struct
 Alumno cargarAlumno();
 void loadStudents(char nombre_archivo[]);
 void insanePila(Pila* A, char nombre_archivo[]);
-
+Alumno replaceComponent(Alumno A);
 int main()
 {
 
@@ -29,18 +31,31 @@ int main()
     int firstAge = 0;
     int secondAge = 0;
     int olderPeople = 0;
+    int yearSearch = 0;
+    int yearCount = 0;
+    Alumno arrayAlumnos[DIM];
+    int validosArray = 0;
+    int fileSize = 0;
+    int posicionA = 0;
+
     Pila pilovich;
     inicpila(&pilovich);
 
     ///--------------------------------//
 
-    puts("\n--------OPCIONES---------");
+    puts("\n----------------OPCIONES-----------------");
     puts("\n1.Ejercicio 1, 2, y 3: Cargar un archivo, mostrarlo, contar los elementos");
     puts("\n2.Ejercicio 4 y 5: Cargar y mostrar un registro de alumnos");
     puts("\n3.Ejercicio 6: Agregar un alumno extra al archivo de alumnos");
     puts("\n4.Ejercicio 7: Pasar el legajo de los mayores de edad a una pila");
     puts("\n5.Ejercicio 8: Contar alumnos mayores a una edad que usted elija");
     puts("\n6.Ejercicio 9: Mostrar alumnos entre un rango de edad");
+    puts("\n7.Ejercicio 10: Mostrar el alumno mas grande");
+    puts("\n8.Ejercicio 11: Contar alumnos que cursan un anio");
+    puts("\n9.Ejercicio 12: Pasar de array a archivo/achivo a array + filtros");
+    puts("\n10.Ejercicio 13: Peso del archivo.");
+    puts("\n11.Ejercicio 14: Imprimir un alumno en cierta posicion.");
+    puts("\n12.Ejercicio 15: Sobreescribir un componente en especifico");
     puts("\n\nIngrese una opcion (primer numero): ");
     scanf("%i", &ejercicio);
 
@@ -79,6 +94,40 @@ int main()
         scanf("%i", &secondAge);
         printf("\nAlumnos entre %i - %i anios:",firstAge, secondAge);
         HowManyOlderRange(namealumnos, firstAge, secondAge);
+        break;
+    case 7:
+        mostrarAlumnos(namealumnos);
+        printf("\nAhora, mostraremos el alumno mas grande: ");
+        mostrarMayor(namealumnos);
+        break;
+    case 8:
+        printf("\nContaremos los alumnos de un anio determinado! Ingrese el anio: ");
+        scanf("%i", &yearSearch);
+        yearCount = contarPorAnio(namealumnos, yearSearch);
+        printf("Cantidad de alumnos: %i", yearCount);
+        break;
+    case 9:
+        printf("\nGuardaremos en el array los alumnos de un anio en especifico!");
+        printf("Ingrese el anio: ");
+        scanf("%i", &yearSearch);
+        validosArray = fileToArray(namealumnos,arrayAlumnos, yearSearch);
+        mostrarAlumnosArray(arrayAlumnos, validosArray);
+        break;
+    case 10:
+        fileSize = cantRegistros(namealumnos);
+        printf("File size: %i registros, ", fileSize);
+        break;
+    case 11:
+        printf("\nIngrese una posicion a imprimir: ");
+        scanf("%i", &posicionA);
+        showPosition(namealumnos,posicionA, DIM);
+        break;
+    case 12:
+        printf("Ingrese una posicion a sobreescribir: ");
+        scanf("%i", &posicionA);
+       // system("PAUSE");
+        overwriteEntry(namealumnos, posicionA);
+        showPosition(namealumnos, posicionA, DIM);
         break;
 
     default:
@@ -161,6 +210,23 @@ int howmany(char nombre_archivo[])
     return count;
 }
 
+Alumno cargarAlumno()
+{
+    Alumno a;
+
+    fflush(stdin);
+    printf("\nIngrese el nombre del alumno: ");
+    gets(a.nombre);
+    printf("\nIngrese la legajo de [ %s ]: ", a.nombre);
+    scanf("%i", &a.legajo);
+    printf("\nIngrese la edad de [ %s ]: ", a.nombre);
+    scanf("%i", &a.edad);
+    printf("\nIngrese el anio de [ %s ]: ", a.nombre);
+    scanf("%i", &a.anio);
+
+    return a;
+}
+
 void loadStudents(char nombre_archivo[])
 {
     int count = 5;
@@ -186,23 +252,6 @@ void loadStudents(char nombre_archivo[])
         fclose(archivin);
     }
 
-}
-
-Alumno cargarAlumno()
-{
-    Alumno a;
-
-    fflush(stdin);
-    printf("\nIngrese el nombre del alumno: ");
-    gets(a.nombre);
-    printf("\nIngrese la legajo de [ %s ]: ", a.nombre);
-    scanf("%i", &a.legajo);
-    printf("\nIngrese la edad de [ %s ]: ", a.nombre);
-    scanf("%i", &a.edad);
-    printf("\nIngrese el anio de [ %s ]: ", a.nombre);
-    scanf(" %c", &a.anio);
-
-    return a;
 }
 
 void mostrarAlumno(Alumno a)
@@ -307,3 +356,228 @@ int HowManyOlderRange(char nombre_archivo[], int age1, int age2)
 
     return count;
 }
+
+void printPorLegajo(char nombre_archivo[], int legajo)
+{
+    Alumno alumnito;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if (archivin != NULL)
+    {
+        while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if(legajo == alumnito.legajo)
+            {
+                mostrarAlumno(alumnito);
+            }
+        }
+    }
+    fclose(archivin);
+}
+
+
+
+void mostrarMayor(char nombre_archivo[])
+{
+    Alumno alumnito;
+    int mayor = 0;
+    int maxlegajo = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+     if (archivin != NULL)
+    {
+        while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if(alumnito.edad > mayor)
+            {
+                mayor = alumnito.edad;  //por cualquier cosa
+                maxlegajo = alumnito.legajo;
+            }
+        }
+    }
+    printPorLegajo(nombre_archivo, maxlegajo);
+    fclose(archivin);
+}
+
+
+int contarPorAnio(char nombre_archivo[], int anio)
+{
+    int count = 0;
+    Alumno alumnito;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+    if (archivin != NULL)
+    {
+        while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if(anio == alumnito.anio)
+            {
+                count++;
+            }
+        }
+        fclose(archivin);
+    }
+
+
+    return count;
+}
+
+void arrayToFile(char nombre_archivo[], Alumno array1[DIM], int validos)
+{
+    int i = 0;
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "ab");
+
+    if (archivin != NULL)
+    {
+        while(i < validos)
+        {
+            fwrite(&array1[i], sizeof(Alumno),1, archivin);
+            i++;
+        }
+        fclose(archivin);
+    }
+
+}
+
+
+void mostrarAlumnosArray(Alumno array1[DIM], int validos)
+{
+    printf("\n===--------------------===");
+    printf("\nLEGAJO | NOMBRES | EDAD | ANIO");
+
+    for(int i = 0; i < validos; i++)
+    {
+        mostrarAlumno(array1[i]);
+    }
+}
+
+int fileToArray(char nombre_archivo[], Alumno array1[DIM], int anio)
+{
+    Alumno alumnito;
+    int i = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+    if (archivin != NULL)
+    {
+        while(i < DIM && fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if(anio == alumnito.anio)
+            {
+                array1[i] = alumnito;
+                i++;
+            }
+        }
+        fclose(archivin);
+    }
+
+    return i; //validos
+}
+
+
+int cantRegistros(char nombre_archivo[])
+{
+    int cant = 0;
+
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+    if (archivin != NULL)
+    {
+        fseek(archivin, 0, SEEK_END);
+        cant = ftell(archivin) / sizeof(Alumno);
+        fclose(archivin);
+    }
+    return cant;
+}
+
+void showPosition(char nombre_archivo[], int pos, int dim)
+{
+    Alumno alumnito;
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "rb");
+
+    if (archivin != NULL)
+    {
+            fseek(archivin, sizeof(Alumno) * pos, SEEK_SET);
+            (fread(&alumnito, sizeof(Alumno), 1, archivin) > 0);
+            printf("\n===--------------------===");
+            printf("\nMATRICULA | NOMBRES | EDAD | ANIO");
+            mostrarAlumno(alumnito);
+
+            fclose(archivin);
+    }
+}
+
+void overwriteEntry(char nombre_archivo[], int pos)
+{
+    Alumno alumnito;
+    FILE *archivin;
+    archivin = fopen(nombre_archivo, "r+b");
+
+    if (archivin != NULL)
+    {
+        fseek(archivin, sizeof(Alumno) * pos, SEEK_SET);
+        fread(&alumnito, sizeof(Alumno), 1, archivin);
+        alumnito = replaceComponent(alumnito);
+        fseek(archivin, sizeof(Alumno) * (-1), SEEK_CUR);
+        fwrite((&alumnito, sizeof(Alumno), 1, archivin);
+    fclose(archivin);
+    }
+}
+
+Alumno replaceComponent(Alumno A) ///sistema de reemplazo
+{
+    int keepgoing = 1;
+    int opcion = 0;
+
+    while(keepgoing == 1)
+    {
+        opcion = 0;
+
+        printf("\nIngrese un campo que sobreescribir: ");
+        puts("\n1. LEGAJO");
+        puts("\n2. NOMBRE");
+        puts("\n3. EDAD");
+        puts("\n4. ANIO");
+
+        printf("Ingrese una opcion a sobreescribir");
+        scanf("%i", &opcion);
+
+        switch(opcion)
+        {
+        case 1:
+            printf("\nIngrese el nuevo LEGAJO: ");
+            scanf("%i", &A.legajo);
+            break;
+        case 2:
+            printf("\nIngrese el nuevo NOMBRE: ");
+            gets(A.nombre);
+            break;
+        case 3:
+            printf("\nIngrese la nueva EDAD: ");
+            scanf("%i", &A.edad);
+            break;
+        case 4:
+            printf("\nIngrese el nuevo ANIO: ");
+            scanf("%i", &A.anio);
+            break;
+        default:
+            printf("\nOpcion incorrecta.");
+            break;
+        }
+
+        mostrarAlumno(A);
+        //system("PAUSE");
+        printf("\nIngrese 1 si desea segiur modificando datos: ");
+        scanf("%i", &keepgoing);
+       // system("cls");
+    }
+    return A;
+}
+
