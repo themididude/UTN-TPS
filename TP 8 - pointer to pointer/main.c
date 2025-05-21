@@ -61,7 +61,7 @@ int contarPares(int array1[], int validos)
 int crearArregloDinamicoPares(int array1[], int**a)      //array1 es el estatico
 {
     int pares = contarPares(array1, DIM);
-
+    int j = 0; //no queremos ponerlos en las posiciones de i del estatico
     *a = malloc(pares * sizeof(int));
 
     printf("\nPares: %i", pares);
@@ -70,8 +70,8 @@ int crearArregloDinamicoPares(int array1[], int**a)      //array1 es el estatico
     {
         if(array1[i] % 2 == 0)
         {
-            (*a)[i] = array1[i];
-            printf("\narraynuevo [%i]: %i", i, (*a)[i]);
+            (*a)[j] = array1[i];
+            j++;
         }
     }
 
