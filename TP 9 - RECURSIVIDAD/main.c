@@ -21,16 +21,21 @@ forma invertida (recursivo).
 
 */
 
+bool esCapicua(int array1[], int i, int j, int validos);
 int main()
 {
     ///------ some simple variables ------//
     int array1[DIM] = {1,2,3,4,5};
+    int arrayCapicua[6] = {1,2,3,3,2,1};
     int numToFact = 0;
     int numFactorial = 0;
     int base = 0;
     int exponente = 0;
     int potencia = 0;
 
+    int validos = 6;
+    int i=0;
+    int j= validos-1;
     ///------ the actual exercises -----//
 
     //punto1 ------------
@@ -62,6 +67,15 @@ int main()
     //punto 4
     printf("\nImprimiendo un arreglo recursivamente...but backwards.. beep...beeeeeep...bep...");
     recorrerYmostrarInvertido(array1, 0, DIM);
+    //punto 5
+    printf("\nEs el array capicua? ");
+    if(esCapicua(arrayCapicua, i, j, validos) == true)
+    {
+        printf("\nSi.");
+    }
+    else{
+        printf("\nNo.");
+    }
 
     return 0;
 }
@@ -111,9 +125,16 @@ void recorrerYmostrarInvertido(int array1[], int i, int validos)
 
 bool esCapicua(int array1[], int i, int j, int validos)
 {
+   // int j = validos-1;  hay que hacer esto en el main.
 
-
-
-
+    if(i < validos / 2)
+    {
+        if(array1[i] != array1[j])
+        {
+            return false;
+        } else {
+            esCapicua(array1, i+1, j-1, validos);
+        }
+        return true;
+    }
 }
-
