@@ -36,9 +36,13 @@ int main()
     int validos = 6;
     int i=0;
     int j= validos-1;
+    int suma = 0;
+    char filename[] = "file";
     ///------ the actual exercises -----//
 
+
     //punto1 ------------
+    //creatingFileRandom(filename);
     printf("\nFactorial de un numero!");
     printf("\nIngrese un numero: ");
     scanf("%i", &numToFact);
@@ -76,6 +80,14 @@ int main()
     else{
         printf("\nNo.");
     }
+    //punto 6
+    printf("\nSumando los elementos de un arreglo de forma recursiva.....");
+    i = 0;
+    suma = sumaRecursiva(array1, i, 5);
+    printf("\nLa suma de los elementos del array = %i", suma);
+
+
+    archivoMenor(filename);
 
     return 0;
 }
@@ -137,4 +149,79 @@ bool esCapicua(int array1[], int i, int j, int validos)
         }
         return true;
     }
+}
+int sumaRecursiva(int array1[], int i, int validos)
+{
+    if(i == validos)
+    {
+        return 0;
+    }
+
+    return array1[i] + sumaRecursiva(array1, i+1, validos);
+}
+
+int RecursivoMenor(FILE *file, int menor)
+{
+    int num;
+
+    if (fscanf(file, "%i", &num) == 1) {
+        printf("Leido: %d\n", num);
+        if(num < menor)
+        {
+            menor = num;
+        }
+        return RecursivoMenor(file, menor);
+    } else {
+        if (feof(file)) {
+            printf("Fin del archivo.\n");
+        } else {
+            perror("Error de lectura del archivo");
+        }
+        return menor;
+    }
+}
+
+
+int archivoMenor(char filename[])
+{
+    int menor = INT_MAX;
+    int num;
+
+    FILE *archivin;
+    archivin = fopen(filename, "rb");
+    if(archivin != NULL)
+    {
+        menor = RecursivoMenor(archivin, menor);
+        printf("\nMenor encontrado: %i", menor);
+
+    } else
+    {
+        printf("Error: el Archivo no existe");
+    }
+
+
+    fclose(archivin);
+}
+
+void creatingFileRandom(char filename[])
+{
+
+    FILE *archivin;
+    archivin = fopen(filename, "rb");
+    if(archivin != NULL)
+    {
+        printf("\nEl archivo ya existe");
+        fclose(archivin);
+    }
+    else
+    {
+        printf("\nCreando el archivo . . . ");
+        archivin = fopen(filename, "wb");
+        fprintf(archivin, "%d\n", 1);
+        fprintf(archivin, "%d\n", 2);
+        fprintf(archivin, "%d\n", 3);
+        fprintf(archivin, "%d\n", 4);
+        fprintf(archivin, "%d\n", 5);
+    }
+    fclose(archivin);
 }
