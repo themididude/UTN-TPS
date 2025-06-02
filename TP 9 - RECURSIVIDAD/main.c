@@ -38,6 +38,7 @@ int main()
     int j= validos-1;
     int suma = 0;
     char filename[] = "file";
+    int menor = INT_MAX;
     ///------ the actual exercises -----//
 
 
@@ -50,7 +51,7 @@ int main()
     printf("\nFactorial de %i: %i", numToFact, numFactorial);
     //system("PAUSE");
     //system("cls");
-
+    printf("\n------------------------------------");
     //punto2 ------------
     printf("\nPotencia de un numero!");
     printf("\nIngrese un numero base: ");
@@ -61,16 +62,17 @@ int main()
     printf("\nPotencia: %i", potencia);
     //system("PAUSE");
     //system("cls");
-
+    printf("\n------------------------------------");
     //punto 3
     printf("\nImprimiendo un arreglo recursivamente.... beep...beeeeeep...bep...");
     recorrerYmostrar(array1, 0, DIM);
     //system("PAUSE");
     //system("cls");
-
+    printf("\n------------------------------------");
     //punto 4
     printf("\nImprimiendo un arreglo recursivamente...but backwards.. beep...beeeeeep...bep...");
     recorrerYmostrarInvertido(array1, 0, DIM);
+    printf("\n------------------------------------");
     //punto 5
     printf("\nEs el array capicua? ");
     if(esCapicua(arrayCapicua, i, j, validos) == true)
@@ -80,15 +82,23 @@ int main()
     else{
         printf("\nNo.");
     }
+    printf("\n------------------------------------");
     //punto 6
     printf("\nSumando los elementos de un arreglo de forma recursiva.....");
     i = 0;
     suma = sumaRecursiva(array1, i, 5);
     printf("\nLa suma de los elementos del array = %i", suma);
-
-
+    printf("\n------------------------------------");
+    //punto 7
+    i = 0;
+    printf("\nBuscando el menor en un arreglo de forma recursiva");
+    menor = menorArray(array1,i, validos, menor);
+    printf("\nMenor elemento encontrado: %i", menor);
+    printf("\n------------------------------------");
+    //punto 8
+    ("\nBuscando el menor en un archivo de forma recursiva");
     archivoMenor(filename);
-
+    printf("\n------------------------------------");
     return 0;
 }
 
@@ -158,6 +168,21 @@ int sumaRecursiva(int array1[], int i, int validos)
     }
 
     return array1[i] + sumaRecursiva(array1, i+1, validos);
+}
+
+int menorArray(int array1[], int i, int validos, int menor)
+{
+    if (i == validos)
+    {
+        return menor;
+    }
+
+    if(array1[i] < menor)
+    {
+        menor = array1[i];
+    }
+
+    return menorArray(array1, i+1, validos, menor);
 }
 
 int RecursivoMenor(FILE *file, int menor)
