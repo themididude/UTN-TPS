@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "pila.h"
 #define MAXALUMNOS 10
 /*
--Hacer una función que agregue un elemento al final de un archivo.
--Hacer una función que muestre por pantalla el contenido de un archivo.
--Hacer una función que retorne la cantidad de registros que contiene un archivo.
--Crear una función que cargue un archivo de alumnos. Abrirlo de manera tal de verificar si el archivo ya está creado previamente. Cargar el archivo con 5 datos. Cerrarlo dentro de la función
--Carear una función que muestre por pantalla los registros de un archivo de alumnos. Modularizar.
--Crear una función que permita agregar de a un elemento al final del archivo. O sea, se debe abrir el archivo, se piden los datos (se llena una variable de tipo struct alumno), se escribe en el archivo y se cierra.
--Crear una función que pase a una pila los números de legajo de los alumnos mayores de edad.
--Dado un archivo de alumnos, hacer una función que cuente la cantidad de alumnos mayores a edad específica que se envía por parámetro.
--Dado un archivo de alumnos, mostrar por pantalla el nombre de todos los alumnos entre un rango de edades específico (por ejemplo, entre 17 y 25 años). Dicho rango debe recibirse por parámetro. Modularizar
+1-Hacer una función que agregue un elemento al final de un archivo.
+2-Hacer una función que muestre por pantalla el contenido de un archivo.
+3-Hacer una función que retorne la cantidad de registros que contiene un archivo.
+4-Crear una función que cargue un archivo de alumnos. Abrirlo de manera tal de verificar si el archivo ya está creado previamente. Cargar el archivo con 5 datos. Cerrarlo dentro de la función
+5-Carear una función que muestre por pantalla los registros de un archivo de alumnos. Modularizar.
+6-Crear una función que permita agregar de a un elemento al final del archivo. O sea, se debe abrir el archivo, se piden los datos (se llena una variable de tipo struct alumno), se escribe en el archivo y se cierra.
+7-Crear una función que pase a una pila los números de legajo de los alumnos mayores de edad.
+8-Dado un archivo de alumnos, hacer una función que cuente la cantidad de alumnos mayores a edad específica que se envía por parámetro.
+9-Dado un archivo de alumnos, mostrar por pantalla el nombre de todos los alumnos entre un rango de edades específico (por ejemplo, entre 17 y 25 años). Dicho rango debe recibirse por parámetro. Modularizar
 
 */
 
@@ -19,7 +20,6 @@ typedef struct {
      char nombre[30];
      int edad;
      int anio;
-//año que cursa, recordar que no podemos utilizar la ñ para definir variables
 } Alumno;
 
 void addElement(char filename[], int element);
@@ -30,20 +30,61 @@ int countRegisters(char filename[]);
 int main()
 {
     ///variables and stuff///
+    int ejercicio = 0;
     char fname[] = "ourfile";
+    char falumno[] = "fileAlumno";
     int registros = 0;
+    int age = 0;
+    int oldCount = 0;
+
+    int age1 = 0; //for the range
+    int age2 = 0;
     Alumno alumnos[MAXALUMNOS];
 
+    Pila pilita;
+    inicpila(&pilita);
 
-    //PUNTO 1, 2, 3 - TESTING
-    printf("\nPrimero, llenemos el archivo.");
-    //addingLoop(fname);
-    printf("\nDebug answer: we already did lol");
-    showFile(fname);
-    registros = countRegisters(fname);
-    printf("\nCantidad de registros: %i", registros);
+    printf("\n1- File con int");
+    printf("\n2- File con Alumnos");
+    printf("\nElige una opcion: ");
+    scanf("%i", &ejercicio);
 
+    switch(ejercicio){
 
+    case 1:
+        //PUNTO 1, 2, 3 - TESTING
+        printf("\nPrimero, llenemos el archivo.");
+        //addingLoop(fname);
+        printf("\nDebug answer: we already did lol");
+        showFile(fname);
+        registros = countRegisters(fname);
+        printf("\nCantidad de registros: %i", registros);
+        system("PAUSE");
+        system("cls");
+        break;
+
+    case 2:
+        //PUNTO 4, 5, 6
+        cargarArchivoAlumnos(falumno);
+        mostrarAlumnos(falumno);
+        printf("\nCarguemos un archivito mas");
+       // addNewElement(falumno);
+        mayores(falumno, &pilita);
+        mostrar(&pilita);
+
+        printf("\nContaremos a los mayores de cierta edad x. Ingrese la edad: ");
+        scanf("%i", &age);
+        oldCount = olderThanAge(falumno, age);
+        printf("\nPersonas contadas: %i", oldCount);
+
+        printf("\nMostraremos a los alumnos en un rango de edad!");
+        printf("\nIngrese la edad minima:");
+        scanf("%i", &age1);
+        printf("\nIngrese la edad maxima:");
+        scanf("%i", &age2);
+        showAgeRange(falumno,age1,age2);
+        break;
+    }
 
     printf("\nUNA MALNASIDA W EN EL CHAT papus");
     return 0;
@@ -143,20 +184,25 @@ void cargarArchivoAlumnos(char filename[])
     int count = 5; // cargar 5 alumnos
     Alumno a;
 
-    FILE *archivin;
-    archivin = fopen(filename, "wb");
 
-    if(archivin != NULL)
+    FILE *check = fopen(filename, "rb");
+
+    if(check != NULL)
     {
+        fclose(check);
         printf("\nError: el archivo ya existe bludi");
     } else {
+        FILE *archivin;
+        archivin = fopen(filename, "wb");
         for(int i=0; i < count; i++)
         {
+
+
             a = cargarAlumno();
             fwrite(&a, sizeof(Alumno), 1, archivin);
         }
+        fclose(archivin);
     }
-    fclose(archivin);
 }
 
 void mostrarAlumno(Alumno a)
@@ -180,4 +226,90 @@ void mostrarAlumnos(char filename[])
     }
     fclose(archivin);
     printf("\n===------------------------===");
+}
+
+void addNewElement(char filename[])
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(filename, "ab");
+
+    if(archivin != NULL)
+    {
+        a = cargarAlumno();
+        fwrite(&a,sizeof(Alumno),1,archivin);
+    } else {
+        printf("\n q no existeee pringao");
+    }
+    fclose(archivin);
+}
+
+void mayores(char filename[], Pila* pilita)
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(filename, "rb");
+
+    if(archivin!=NULL)
+    {
+        while(fread(&a, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if (a.edad > 18)
+            {
+                apilar(pilita, a.legajo);
+            }
+        }
+    } else{
+        printf("\n q no existeee pringao");
+    }
+    fclose(archivin);
+}
+
+int olderThanAge(char filename[], int age)
+{
+    Alumno a;
+    int count = 0;
+
+    FILE *archivin;
+    archivin = fopen(filename, "rb");
+
+    if(archivin!=NULL)
+    {
+        while(fread(&a, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if (a.edad > age)
+            {
+                count++;
+            }
+        }
+    } else{
+        printf("\n q no existeee pringao");
+    }
+    fclose(archivin);
+
+    return count;
+}
+
+void showAgeRange(char filename[], int age1, int age2)
+{
+    Alumno a;
+
+    FILE *archivin;
+    archivin = fopen(filename, "rb");
+
+    if (archivin!=NULL)
+    {
+        while(fread(&a, sizeof(Alumno), 1, archivin) > 0)
+        {
+            if (a.edad >= age1 && a.edad <= age2)
+            {
+                mostrarAlumno(a);
+            }
+        }
+    } else{
+        printf("\n q no existeee pringao");
+    }
+    fclose(archivin);
 }
