@@ -1,110 +1,126 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAXALUMNOS 10
+/*
+-Hacer una función que agregue un elemento al final de un archivo.
+-Hacer una función que muestre por pantalla el contenido de un archivo.
+-Hacer una función que retorne la cantidad de registros que contiene un archivo.
+-Crear una función que cargue un archivo de alumnos. Abrirlo de manera tal de verificar si el archivo ya está creado previamente. Cargar el archivo con 5 datos. Cerrarlo dentro de la función
+-Carear una función que muestre por pantalla los registros de un archivo de alumnos. Modularizar.
+-Crear una función que permita agregar de a un elemento al final del archivo. O sea, se debe abrir el archivo, se piden los datos (se llena una variable de tipo struct alumno), se escribe en el archivo y se cierra.
+-Crear una función que pase a una pila los números de legajo de los alumnos mayores de edad.
+-Dado un archivo de alumnos, hacer una función que cuente la cantidad de alumnos mayores a edad específica que se envía por parámetro.
+-Dado un archivo de alumnos, mostrar por pantalla el nombre de todos los alumnos entre un rango de edades específico (por ejemplo, entre 17 y 25 años). Dicho rango debe recibirse por parámetro. Modularizar
 
-#define DIM 10
-
+*/
 
 typedef struct {
      int legajo;
      char nombre[30];
      int edad;
      int anio;
-
+//año que cursa, recordar que no podemos utilizar la ñ para definir variables
 } Alumno;
+
+void addElement(char filename[], int element);
+void addingLoop(char filename[]);
+void showFile(char filename[]);
+int countRegisters(char filename[]);
 
 int main()
 {
-    printf("Hello world!\n");
-
-    ///-----------random variables-----------///
-    int arrDim = 0;
-    char namealumnos[] = "alumnos.dat";
-    int arrDim2 = 0;
-    int fileSize = 0;
-
-    ///------------simple thingy (1)---------///
-    /*
-    printf("\nSimple Print:");
-    int valor = 10;
-    int * pint = &valor;
-    int ** ppint = &pint;
-    showMemory(&valor, &pint, &ppint);
-    system("PAUSE");
-    */
-
-    ///---------------frfrfrfr2---------------///
-    /*
-    int array1[DIM] = {1,2,3,4,5,6,7,8,9,10}; //estatico
-    int*a;
-    arrDim = crearArregloDinamicoPares(array1, &a); //para este punto a es un arreglo normal
-    printArray(a, arrDim);
-    */
-    ///---------------ejercicio 3-------------///
+    ///variables and stuff///
+    char fname[] = "ourfile";
+    int registros = 0;
+    Alumno alumnos[MAXALUMNOS];
 
 
-    Alumno*arrayFile;
-    fileSize = cantRegistros(namealumnos);
-    arrayFile = malloc(fileSize * sizeof(Alumno));
-    printf("File size: %i registros, ", fileSize);
-    fileToArray(namealumnos, arrayFile, fileSize);
-    mostrarAlumnosArray(arrayFile3, fileSize);
+    //PUNTO 1, 2, 3 - TESTING
+    printf("\nPrimero, llenemos el archivo.");
+    //addingLoop(fname);
+    printf("\nDebug answer: we already did lol");
+    showFile(fname);
+    registros = countRegisters(fname);
+    printf("\nCantidad de registros: %i", registros);
 
 
+
+    printf("\nUNA MALNASIDA W EN EL CHAT papus");
     return 0;
 }
 
-void showMemory(int valor, int * pint, int ** ppint)
+
+/////////////////////////// first part///////////////////////////////////////////////
+void addElement(char filename[], int element)
 {
 
-    printf("\ndire de valor: %p", &valor);
-    printf("\ndire de pint: %p", &pint);
-    printf("\ndire de ppint: %p", ppint);
+    FILE *archivin;
+    archivin = fopen(filename,  "ab"); //ab pone el indicador al final
+
+    if (archivin != NULL)
+    {
+        fwrite(&element, sizeof(int),1, archivin);
+
+    } else {
+
+        printf("\nError: the file doesnt exist dude");
+    }
+    fclose(archivin);
 }
 
-
-int contarPares(int array1[], int validos)
+void addingLoop(char filename[])
 {
-    int count = 0;
-    for(int i = 0; i < validos; i++)
+    int continuee = 1;
+
+    while(continuee == 1)
     {
-        if(array1[i] % 2 == 0)
+        int value = 0 ;
+        printf("\nIngrese un elemento:");
+        scanf("%i", &value);
+        addElement(filename, value);
+
+        printf("\nIngrese 1 para agregar mas valores: ");
+        scanf("%i", &continuee);
+    }
+}
+
+void showFile(char filename[])
+{
+    int value;
+
+    FILE* archivin;
+    archivin = fopen(filename, "rb"); //we only need to read it
+
+    if(archivin!=NULL)
+    {
+        while(fread(&value, sizeof(int),1, archivin) > 0) //so while theres things left to count
         {
-            count++;
+            printf("\nINT = %i", value);
         }
+
+    } else {
+        printf("\nError: the file doesnt exist dude");
     }
-    return count;
+    fclose(archivin);
 }
 
-int crearArregloDinamicoPares(int array1[], int**a)      //array1 es el estatico
+int countRegisters(char filename[])
 {
-    int pares = contarPares(array1, DIM);
-    int j = 0; //no queremos ponerlos en las posiciones de i del estatico
-    *a = malloc(pares * sizeof(int));
+    FILE* archivin;
+    archivin = fopen(filename, "rb"); //we only need to read it
 
-    printf("\nPares: %i", pares);
+    if(archivin==NULL) return -1;
 
-    for(int i = 0; i < DIM; i++)
-    {
-        if(array1[i] % 2 == 0)
-        {
-            (*a)[j] = array1[i];
-            j++;
-        }
-    }
+    fseek(archivin, 0, SEEK_END);      //vamos al final
+    long size = ftell(archivin);       //get the size
+    fclose(archivin);
 
-    return pares; ///dimension final del dinamico
-}
-
-void printArray(int array1[], int validos)
-{
-    for(int i = 0; i < validos; i++)
-    {
-        printf("\narray[%i] = %i", i, array1[i]);
-    }
+    return size / sizeof(int);           //return, divide by sizeof typefile
 }
 
 
-////////////////////////// alumnos y eso
+/////// new section /// alumnos // if yk yk ////////
+
 Alumno cargarAlumno()
 {
     Alumno a;
@@ -122,31 +138,25 @@ Alumno cargarAlumno()
     return a;
 }
 
-void loadStudents(char nombre_archivo[])
+void cargarArchivoAlumnos(char filename[])
 {
-    int count = 5;
+    int count = 5; // cargar 5 alumnos
     Alumno a;
 
     FILE *archivin;
-    archivin = fopen(nombre_archivo, "rb");
+    archivin = fopen(filename, "wb");
+
     if(archivin != NULL)
     {
-        printf("\nEl archivo ya existe");
-        fclose(archivin);
-
-    }
-    else
-    {
-        printf("\nCreando el archivo . . . ");
-        archivin = fopen(nombre_archivo, "wb");
-        for(int i = 0; i < count; i++)
+        printf("\nError: el archivo ya existe bludi");
+    } else {
+        for(int i=0; i < count; i++)
         {
             a = cargarAlumno();
-            fwrite(&a,sizeof(Alumno),1,archivin);
+            fwrite(&a, sizeof(Alumno), 1, archivin);
         }
-        fclose(archivin);
     }
-
+    fclose(archivin);
 }
 
 void mostrarAlumno(Alumno a)
@@ -154,66 +164,20 @@ void mostrarAlumno(Alumno a)
     printf("\n[ %i ] [ %s ] [ %i ] [ %i ]", a.legajo, a.nombre, a.edad, a.anio);
 }
 
-void mostrarAlumnos(char nombre_archivo[])
+void mostrarAlumnos(char filename[])
 {
     Alumno a;
 
     FILE *archivin;
-    archivin = fopen(nombre_archivo, "rb");
+    archivin = fopen(filename, "rb");
 
     printf("\n===------------------------===");
     printf("\nLEGAJO | NOMBRES | EDAD | ANIO");
 
-    while(fread(&a, sizeof(Alumno), 1, archivin) )
+    while(fread(&a, sizeof(Alumno), 1, archivin) > 0) //so its not over
     {
         mostrarAlumno(a);
     }
     fclose(archivin);
     printf("\n===------------------------===");
-}
-
-int cantRegistros(char nombre_archivo[])
-{
-    int cant = 0;
-
-    FILE *archivin;
-    archivin = fopen(nombre_archivo, "rb");
-    if (archivin != NULL)
-    {
-        fseek(archivin, 0, SEEK_END);
-        cant = ftell(archivin) / sizeof(Alumno);
-        fclose(archivin);
-    }
-
-    return cant;
-}
-
-void fileToArray(char nombre_archivo[], Alumno array1[DIM], int validos)
-{
-    int i = 0;
-    Alumno alumnito;
-    FILE *archivin;
-    archivin = fopen(nombre_archivo, "rb");
-
-    if (archivin != NULL)
-    {
-        while(fread(&alumnito, sizeof(Alumno), 1, archivin) > 0)
-        {
-            array1[i] = alumnito;
-            i++;
-        }
-        fclose(archivin);
-    }
-
-}
-
-void mostrarAlumnosArray(Alumno array1[DIM], int validos)
-{
-    printf("\n===--------------------===");
-    printf("\nLEGAJO | NOMBRES | EDAD | ANIO");
-
-    for(int i = 0; i < validos; i++)
-    {
-        mostrarAlumno(array1[i]);
-    }
 }
