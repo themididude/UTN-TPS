@@ -89,6 +89,15 @@ public class Main
         //se declara asi
         //int numeros [];
 
+        //para instanciar un array usamos new
+        //personas = new persona[3];
+        //accedemos con subindice
+
+        //for each, en arrays
+        //for(String fruta : frutas)
+
+
+
 
         ///------------// GUIA //------------///
 
