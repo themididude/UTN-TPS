@@ -1,0 +1,65 @@
+import java.util.Scanner;
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        /// clase 1 y clase 2    -   12/08/25
+
+        int numN = 5;
+        double numA = 1000;
+        char numC = '9';
+
+
+
+        System.out.println("numN = " + numN);
+        System.out.println("numA = " + numA);
+        System.out.println("numC = " + numC);
+        double result1 = numN + numA;
+        double result2 = numA - numN;
+        int value = Character.getNumericValue(numC);
+
+
+        System.out.println("numN + numA = " + result1);
+        System.out.println("numA - numN = " + result2);
+        System.out.println("valor numerico de numC = " + value);
+
+        /// declarar dos variables numX y numY
+        /// de tipo int, dos variables numD y numE de tipo double y asigna a cada una un valor. A
+        /// continuación mostrar por pantalla una serie de operaciones entre ellas.
+
+        int numX = 5;
+        int numY = 40;
+
+        double numD = 10;
+        double numE = 10;
+
+        //despues lo hago jojo juju
+
+
+
+        /// -------------// CLASE 2 //------------------// APUNTES // -----------------///
+
+        ///scanner
+
+//        Scanner coolScan = new Scanner(System.in);
+//        System.out.printf("Ingrese un numero: ");
+//        int numero = coolScan.nextInt();
+//        coolScan.nextLine(); //sacar el salto de linea /0
+//        System.out.printf("Num: " + numero);
+//        coolScan.close();
+
+        ///wrapper
+            //distintos metodos para trabajar (comprobaciones)
+            // distintos del tipo primitivo, por lo general con mayuscula en la declaracion
+            // ej: Boolean en vez de bool, Integer
+            //Parse int por ejemplo, transforma un string especificado en un int
+            //Character class tiene metodos como isAlphabetic, isDigit, isSpaceChar
+
+        ///------------// GUIA //------------///
+
+        Scanner coolScan = new Scanner(System.in);
+        int N = coolScan.nextInt();
+
+    }
+}
