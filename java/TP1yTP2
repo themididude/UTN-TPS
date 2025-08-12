@@ -11,7 +11,6 @@ public class Main
         char numC = '9';
 
 
-
         System.out.println("numN = " + numN);
         System.out.println("numA = " + numA);
         System.out.println("numC = " + numC);
@@ -50,16 +49,59 @@ public class Main
 //        coolScan.close();
 
         ///wrapper
-            //distintos metodos para trabajar (comprobaciones)
-            // distintos del tipo primitivo, por lo general con mayuscula en la declaracion
-            // ej: Boolean en vez de bool, Integer
-            //Parse int por ejemplo, transforma un string especificado en un int
-            //Character class tiene metodos como isAlphabetic, isDigit, isSpaceChar
+        //distintos metodos para trabajar (comprobaciones)
+        // distintos del tipo primitivo, por lo general con mayuscula en la declaracion
+        // ej: Boolean en vez de bool, Integer
+        //Parse int por ejemplo, transforma un string especificado en un int
+        //Character class tiene metodos como isAlphabetic, isDigit, isSpaceChar
+
+        ///string
+
+        //String miString = "yeah";
+        // o sino
+        //String miString = new String("yeah");
+
+        //A.CompareTo(string B) compara una cosa con otra hell yeah
+        //0 si es igual, negativo si es anterior a b, positivo si es mayor
+        // == compara por referencia, es decir, si son literalmente el mismo objeto
+        // equals compara por valor, es decir, si valen lo mismo
+        // equals ignore case existe hel yea
+
+        //length() existe
+        //con el + podes juntar cadenas
+        //toLowersCase()  ,   toUpperCase()
+        //.trim() saca los espacios
+        // indexOf devuelve en que posicion esta el caracter indicado
+        //lastIndexOf en que posicion se encuentra buscando desde el final
+
+        /// string builder
+
+        //es como un string pero con otros metodos similares
+        //en lugar de +, podemos usar a.append() para agregar algo
+        //setChar(1, 'V') reemplaza una posicion de index seleccionada con una letra elegida
+        //delete -  lo mismo pero saca una posicion
+        //a.insert() - inserta sin reemplazar
+        //a.reverse() - lo invierte
+
+        /// arrays
+
+        //hay arrays bidimensionales aca tambien
+        //se declara asi
+        //int numeros [];
+
 
         ///------------// GUIA //------------///
 
         Scanner coolScan = new Scanner(System.in);
         int N = coolScan.nextInt();
+        coolScan.nextLine();
+
+        N += 77;
+        int remaining = N - 3;
+        N -= remaining;
+        N *= 2;
+
+        System.out.println("N + 77 =" + N);
 
     }
 }
